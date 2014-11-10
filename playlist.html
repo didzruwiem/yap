@@ -32,13 +32,6 @@
             ['Pentatonix - Carol of the Bells','4:10','https://www.youtube.com/watch?v=WSUFzC6_fp8'],
             ['Naughty Boy - La La La ft. Sam Smith','4:03','https://www.youtube.com/watch?v=3O1_3zBUKM8']);
 
-//            var result = tracks[0][2].substr(tracks[0][2].indexOf("=") + 1); //get video id
-
-    var getFirst = function() {
-        return tracks[0][2].substr(tracks[0][2].indexOf("=") + 1); //get video id
-    };
-
-
     var getPlaylist = function() {
         var res = [];
         for(var i = 0; i < tracks.length; i+=1) {
@@ -47,10 +40,7 @@
         return res;
     };
 
-    console.log(getPlaylist());
-
     var iter = 0;
-
     $("#playlist").tubeplayer({
         width: 500, // the width of the player
         height: 350, // the height of the player
