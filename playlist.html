@@ -1,44 +1,87 @@
 <html>
-    
-    <head>
-        <style>
-            #playlist {
-                width:500px;
-            }
-            #playlist div{
-                border: 1px solid #BBB;
-                background-color: #DDD;
-            }
-        </style>
-        
-        <script>
 
-        var tracks = new Array(
-        ['Avicii - Levels','3:18','https://www.youtube.com/watch?v=_ovdm2yX4MA'],
-        ['Avicii - Hey Brother (Lyrical)','4:18','https://www.youtube.com/watch?v=YxIiPLVR6NA'],
-        ['Avicii - You Make Me (Lyrical)','3:59','https://www.youtube.com/watch?v=Wb5VOQexMBU'],
-        ['OneRepublic - Counting Stars','4:43','https://www.youtube.com/watch?v=hT_nvWreIhg'],
-        ['Jesse Stewart - Cold Beer','3:40','https://www.youtube.com/watch?v=ZEvQOPUHGH8'],
-        ['DZIDZIO - Старі фотографії','3:33','https://www.youtube.com/watch?v=_Gx0ZyQSSpg'],
-        ['Sound Choir Romania - Shchedryk','1:54','https://www.youtube.com/watch?v=cP5iHPOJKlk'],
-        ['Pentatonix - Carol of the Bells','4:10','https://www.youtube.com/watch?v=WSUFzC6_fp8'],
-        ['Naughty Boy - La La La ft. Sam Smith','4:03','https://www.youtube.com/watch?v=3O1_3zBUKM8']);
-        
-        var output = '';
-        for (i = 0; i < tracks.length; i++) {
-            output += '<div>' + tracks[i][0] + ' - ' + tracks[i][1] + '</div>';
+<head>
+    <style>
+        #playlist {
+            width:500px;
         }
+        #playlist div{
+            border: 1px solid #BBB;
+            background-color: #DDD;
+        }
+    </style>
+</head>
 
-        </script>
-        
-    </head>
-    
-    <body>
-        
-        <div id="playlist">
-            <script>document.write(output);</script>
-        </div>
-        
-    </body>
-    
+<body>
+
+<div id="playlist"></div>
+
+<div id="youtube-player-container" style="float:right"> </div>
+
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script type="text/javascript" src="http://www.tikku.com/scripts/ui/tubeplayer/jQuery.tubeplayer.js"></script>
+<script type="text/javascript">
+    var tracks = new Array(
+            ['Avicii - Levels','3:18','https://www.youtube.com/watch?v=_ovdm2yX4MA'],
+            ['Avicii - Hey Brother (Lyrical)','4:18','https://www.youtube.com/watch?v=YxIiPLVR6NA'],
+            ['Avicii - You Make Me (Lyrical)','3:59','https://www.youtube.com/watch?v=Wb5VOQexMBU'],
+            ['OneRepublic - Counting Stars','4:43','https://www.youtube.com/watch?v=hT_nvWreIhg'],
+            ['Jesse Stewart - Cold Beer','3:40','https://www.youtube.com/watch?v=ZEvQOPUHGH8'],
+            ['DZIDZIO - Старі фотографії','3:33','https://www.youtube.com/watch?v=_Gx0ZyQSSpg'],
+            ['Sound Choir Romania - Shchedryk','1:54','https://www.youtube.com/watch?v=cP5iHPOJKlk'],
+            ['Pentatonix - Carol of the Bells','4:10','https://www.youtube.com/watch?v=WSUFzC6_fp8'],
+            ['Naughty Boy - La La La ft. Sam Smith','4:03','https://www.youtube.com/watch?v=3O1_3zBUKM8']);
+
+//            var result = tracks[0][2].substr(tracks[0][2].indexOf("=") + 1); //get video id
+
+    var getFirst = function() {
+        return tracks[0][2].substr(tracks[0][2].indexOf("=") + 1); //get video id
+    };
+
+
+    var getPlaylist = function() {
+        var res = [];
+        for(var i = 0; i < tracks.length; i+=1) {
+            res.push(tracks[i][2].substr(tracks[i][2].indexOf("=") + 1));
+        }
+        return res;
+    };
+
+    console.log(getPlaylist());
+
+    var iter = 0;
+
+    $("#playlist").tubeplayer({
+        width: 500, // the width of the player
+        height: 350, // the height of the player
+        allowFullScreen: "true", // true by default, allow user to go full screen
+        initialVideo: getPlaylist()[iter], // the video that is loaded into the player
+        preferredQuality: "default",// preferred quality: default, small, medium, large, hd720
+        theme: "light",
+        wmode: "transparent",
+        onPlay: function(id){}, // after the play method is called
+        onPause: function(){}, // after the pause method is called
+        onStop: function(){}, // after the player is stopped
+        onSeek: function(time){}, // after the video has been seeked to a defined point
+        onMute: function(){}, // after the player is muted
+        onUnMute: function(){}, // after the player is unmuted
+        // Player State Change Specific Functionality
+        onPlayerUnstarted: function(){}, // when the player returns a state of unstarted
+        onPlayerEnded: function() {
+            iter+=1;
+            $("#playlist").tubeplayer('play', getPlaylist()[iter]);
+        }, // when the player returns a state of ended
+        onPlayerPlaying: function(){}, //when the player returns a state of playing
+        onPlayerPaused: function(){}, // when the player returns a state of paused
+        onPlayerBuffering: function(){}, // when the player returns a state of buffering
+        onPlayerCued: function(){}, // when the player returns a state of cued
+        onQualityChange: function(quality){}, // a function callback for when the quality of a video is determined
+        // Error State Specific Functionality
+        onErrorNotFound: function(){}, // if a video cant be found
+        onErrorNotEmbeddable: function(){}, // if a video isnt embeddable
+        onErrorInvalidParameter: function(){} // if we've got an invalid param
+    });
+</script>
+</body>
+
 </html>
