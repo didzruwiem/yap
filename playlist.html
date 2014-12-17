@@ -1,58 +1,57 @@
 <!doctype html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title>YouTubeApp</title>
+	<head>
+	    <meta charset="UTF-8">
+	    <title>YouTubeApp</title>
 
-    <script src="googleapis.com/ajax/libs/swfobject/2.2/swtobject.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
-    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script type="text/javascript">
+	    <script src="googleapis.com/ajax/libs/swfobject/2.2/swtobject.js"></script>
+	    <script src="//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
+	    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+	    <script type="text/javascript">
 
         var tracks = new Array(
-                // VEVO play resrictions, would be nice to get around, but I don't think it's possible.
-//                ['Avicii - Levels','3:18','https://www.youtube.com/watch?v=_ovdm2yX4MA'],
-//                ['Avicii - Hey Brother (Lyrical)','4:18','https://www.youtube.com/watch?v=YxIiPLVR6NA'],
-//                ['Avicii - You Make Me (Lyrical)','3:59','https://www.youtube.com/watch?v=Wb5VOQexMBU'],
-//                ['OneRepublic - Counting Stars','4:43','https://www.youtube.com/watch?v=hT_nvWreIhg'],
-
-//                ['', '3:11', ''],
+ 
                 ['Jesse Stewart - Cold Beer','3:40','https://www.youtube.com/watch?v=ZEvQOPUHGH8'],
                 ['Miley Cyrus - Jolene', '3:11', 'https://www.youtube.com/watch?v=wOwblaKmyVw'],
                 ['DZIDZIO - Старі фотографії','3:33','https://www.youtube.com/watch?v=_Gx0ZyQSSpg'],
                 ['Sound Choir Romania - Shchedryk','1:54','https://www.youtube.com/watch?v=cP5iHPOJKlk'],
                 ['Pentatonix - Carol of the Bells','4:10','https://www.youtube.com/watch?v=WSUFzC6_fp8']
-//                ['Naughty Boy - La La La ft. Sam Smith','4:03','https://www.youtube.com/watch?v=3O1_3zBUKM8']);
-                );
+        
+        );
 
         var getPlaylist = function() {
             var res = [];
+
             for(var i = 0; i < tracks.length; i+=1) {
                 res.push(tracks[i][2].substr(tracks[i][2].indexOf("=") + 1));
             }
+
             return res;
         };
+
 
         var params = { allowScriptAccess: "always"};
         var atts = { id: "tubePlayer"};
         swfobject.embedSWF("http://www.youtube.com/apiplayer?enablejsapi=1&playerapiid=ytplayer&version=3&controls=1&showinfo=0", "tubePlayer", "425", "356", "8", null, null, params, atts);
 
+
         var player;
-        var iter = 0;
-        function onYouTubePlayerReady(id) {
+       	var PlaylistIdentifier = {};
+
+        function onYouTubePlayerReady(id, iter) {
+        	
+        	if(iter == undefined){
+        		iter = 0;
+        	}
+        	
+        	PlaylistIdentifier['Number'] = iter;
+
             player=$("#tubePlayer").get(0);
             player.loadVideoById({'videoId': getPlaylist()[iter], 'startSeconds': 0,/* 'endSeconds': 0,*/ 'suggestedQuality': 'large'});
             player.addEventListener("onStateChange", "onytplayerStateChange");
         }//end onYouTubePlayerReady
 
-        /*
-//         -1 (unstarted)
-//         0 (ended)
-//         1 (playing)
-//         2 (paused)
-//         3 (buffering)
-//         5 (video cued).
-         */
+    
         function onytplayerStateChange(newState) {
             if(newState === 0) {
                 iter+=1;
@@ -63,6 +62,36 @@
                 console.log("Current time is: " + player.getCurrentTime());
             }
         }
+
+
+        function nextplay(){
+
+        	nextNumber = PlaylistIdentifier['Number'] + 1;
+        	
+        	onYouTubePlayerReady('ytplayer', nextNumber);
+
+        }
+
+
+        function previousplay(){
+        	if(PlaylistIdentifier['Number'] != 0){
+
+        		previousNumber = PlaylistIdentifier['Number'] - 1;
+
+        		onYouTubePlayerReady('ytplayer', previousNumber);
+
+        	} else {
+
+        		alert('There are no video for previous');
+        	}
+        }
+
+        function restartplay(){
+        	
+        	onYouTubePlayerReady('ytplayer', PlaylistIdentifier['Number']);
+        }
+
+
     </script>
 </head>
 
@@ -70,9 +99,9 @@
 <p>
     <button onclick="player.pauseVideo()">pause</button>
     <button onclick="player.playVideo()">start</button>
-    <button onclick="">restart</button>
-    <button onclick="">previous</button>
-    <button onclick="">next</button>
+    <button onclick="restartplay()">restart</button>
+    <button onclick="previousplay()">previous</button>
+    <button onclick="nextplay()">next</button>
 </p>
 <div id="tubePlayer">
     You may or may not need Flash Player something or other and JavaScript enabled to blow up the enterprise.
