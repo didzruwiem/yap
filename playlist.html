@@ -63,7 +63,7 @@
             }
         }
 
-
+      
         function nextplay(){
 
         	nextNumber = PlaylistIdentifier['Number'] + 1;
@@ -92,6 +92,64 @@
         }
 
 
+
+        var secInterval = 0;
+
+        var minutes = 0;
+
+        function getCurrentTime(){
+
+        	$('.CurrentTime').text(player.getCurrentTime());
+
+        	$('.CurrentTime').each(function(){
+        			
+    	 		var getCurrentTime = $(this).text();
+    	 		var LenghtTime = getCurrentTime.indexOf(".");
+   	 			var getSeconds = getCurrentTime.substring(0, LenghtTime);
+                    
+        
+                if(secInterval == 0){
+                    secInterval = 60;
+                   
+                }
+
+                if(getSeconds == secInterval && secInterval != 0){
+                    secInterval = secInterval + 60;
+                    ++minutes;
+                }
+
+                if(getSeconds > 59){
+
+                     var subValue = secInterval - 60;
+
+                } else {
+
+                    subValue =0;
+                }
+
+                   
+                Seconds =  getSeconds - subValue;
+               
+                if(Seconds <= 9){
+
+                    Seconds = '0'+Seconds;
+                }
+
+                if(minutes == 1 && Seconds == 22){
+                	alert('Video Time is: ' + minutes +':'+Seconds);
+                }
+
+                $('.VideoTime').text(minutes + ':' + Seconds);
+    		});
+           
+        }
+
+        
+
+
+       
+        var myTimer = setInterval(getCurrentTime,  1000);
+       
     </script>
 </head>
 
@@ -102,9 +160,10 @@
     <button onclick="restartplay()">restart</button>
     <button onclick="previousplay()">previous</button>
     <button onclick="nextplay()">next</button>
-</p>
 <div id="tubePlayer">
     You may or may not need Flash Player something or other and JavaScript enabled to blow up the enterprise.
 </div>
+<div class="CurrentTime" style="display:none"></div>
+<div class="VideoTime"></div>
 </body>
 </html>
