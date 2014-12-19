@@ -70,6 +70,8 @@
         	
         	onYouTubePlayerReady('ytplayer', nextNumber);
 
+        	getCurrentTime('Reset');
+
         }
 
 
@@ -80,6 +82,8 @@
 
         		onYouTubePlayerReady('ytplayer', previousNumber);
 
+        		getCurrentTime('Reset');
+
         	} else {
 
         		alert('There are no video for previous');
@@ -89,6 +93,8 @@
         function restartplay(){
         	
         	onYouTubePlayerReady('ytplayer', PlaylistIdentifier['Number']);
+
+        	getCurrentTime('Reset');
         }
 
 
@@ -97,7 +103,11 @@
 
         var minutes = 0;
 
-        function getCurrentTime(){
+        function getCurrentTime(status){
+        	
+        	if(status=='Reset'){
+        		minutes =0;
+        	}
 
         	$('.CurrentTime').text(player.getCurrentTime());
 
@@ -120,7 +130,7 @@
 
                 if(getSeconds > 59){
 
-                     var subValue = secInterval - 60;
+                     subValue = secInterval - 60;
 
                 } else {
 
