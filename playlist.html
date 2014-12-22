@@ -1,245 +1,266 @@
 <!doctype html>
 <html>
-	<head>
-	    <meta charset="UTF-8">
-	    <title>YouTubeApp</title>
-	    <script src="googleapis.com/ajax/libs/swfobject/2.2/swtobject.js"></script>
-	    <script src="//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
-	    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-	    <style>
-	    	.container{
-	    		width: 825px;
-	    	}
-	    	.header{
-	    		height: 50px;
-	    	}
-	    	.nav-btns{
-	    		width: 425px;
-	    		padding: 12px 0px;
-	    		position: absolute;
-	    	}
-	    	.VideoTime{
-	    		padding: 15px 10px;
-	    		margin-left: 425px;
-	    		font-size: 16px;
-	    		border: solid 1px #000;
-	    	}
-	    	#tubePlayer{
-	    		position: absolute;
-	    	}
-	    	.playlist{
-	    		margin-left: 425px;
-	    		font-size: 16px;
-	    		border: solid 1px #000;
-	    	}
-	    	.list{
-	    		list-style-type:none;
-	    		
-	    		padding:0px 10px;
-	    	}
-	    	.list li a{
-	    		text-decoration: none;
-	    		color: #333;
-	    	}
-	    	.list li{
-	    		border-top: solid 1px #333;
-	    	}
-	    	.playlist-details{
-	    		padding:10px;
-	    	}
-	    	.video-time{
-	    		float: right;
-	    	}
-	    </style>
-	</head>
-	<body>
-		<div class="container">
-			<div class="header">
-				<div class="nav-btns">
-					<button onclick="player.pauseVideo()">Pause</button>
-				    <button onclick="player.playVideo()">Start</button>
-				    <button onclick="restartplay()">Restart</button>
-				    <button onclick="previousplay()">Previous</button>
-				    <button onclick="nextplay()">Next</button>
-				</div>
-				<div class="CurrentTime" style="display:none"></div>
-				<div class="VideoTime"></div>
-			</div>
-			<div id="tubePlayer">
-    			You may or may not need Flash Player something or other and JavaScript enabled to blow up the enterprise.
-			</div>
-			<div class="playlist">
-				<ul class="list">
-				</ul>
-				
-			</div>
-		</div>
-	</body>
+    <head>
+        <meta charset="UTF-8">
+        <title>YouTubeApp</title>
+        <script src="googleapis.com/ajax/libs/swfobject/2.2/swtobject.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
+        <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <style>
+            .container{
+                width: 825px;
+            }
+            .header{
+                height: 50px;
+            }
+            .nav-btns{
+                width: 425px;
+                padding: 12px 0px;
+                position: absolute;
+            }
+            .VideoTime{
+                padding: 15px 10px;
+                margin-left: 425px;
+                font-size: 16px;
+                border: solid 1px #000;
+            }
+            #tubePlayer{
+                position: absolute;
+            }
+            .playlist{
+                margin-left: 425px;
+                height: 356px;
+                font-size: 16px;
+                margin-bottom: 0px; 
+                overflow:auto;
+                background-color: #333;
+            }
+            .list{
+                list-style-type:none;
+              	padding: 0px;
+            }
+            .list li a{
+                text-decoration: none;
+                color: #fff;
+            }
+            .list li:hover{
+            	 background-color: #3a3a3a;
+            }
+            .active{
+               background-color: #d9534f;
+            }
+           
+            .playlist-details{
+                padding:10px 10px;
+            }
+            .video-time{
+                float: right;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <div class="nav-btns">
+                    <button onclick="player.pauseVideo()">Pause</button>
+                    <button onclick="player.playVideo()">Start</button>
+                    <button onclick="restartplay()">Restart</button>
+                    <button onclick="previousplay()">Previous</button>
+                    <button onclick="nextplay()">Next</button>
+                </div>
+                <div class="CurrentTime" style="display:none"></div>
+                <div class="VideoTime"></div>
+            </div>
+            <div id="tubePlayer">
+                You may or may not need Flash Player something or other and JavaScript enabled to blow up the enterprise.
+            </div>
+            <div class="playlist">
+                <ul class="list">
 
-	<script type="text/javascript">
+                </ul>
+                
+            </div>
+        </div>
+    </body>
 
-	        var tracks = new Array(
-	 
-	                ['Jesse Stewart - Cold Beer','3:40','https://www.youtube.com/watch?v=ZEvQOPUHGH8'],
-	                ['Miley Cyrus - Jolene', '3:11', 'https://www.youtube.com/watch?v=wOwblaKmyVw'],
-	                ['DZIDZIO - Старі фотографії','3:33','https://www.youtube.com/watch?v=_Gx0ZyQSSpg'],
-	                ['Sound Choir Romania - Shchedryk','1:54','https://www.youtube.com/watch?v=cP5iHPOJKlk'],
-	                ['Pentatonix - Carol of the Bells','4:10','https://www.youtube.com/watch?v=WSUFzC6_fp8']
-	        
-	        );
+    <script type="text/javascript">
 
-
-	        var getPlaylist = function() {
-
-	            var res = [];
-	            for(var i = 0; i < tracks.length; i+=1) {
-	                res.push(tracks[i][2].substr(tracks[i][2].indexOf("=") + 1));
-	            }
-	            return res;
-	        };
+            var tracks = new Array(
+     
+                    ['Jesse Stewart - Cold Beer','3:40','https://www.youtube.com/watch?v=ZEvQOPUHGH8'],
+                    ['Miley Cyrus - Jolene', '3:11', 'https://www.youtube.com/watch?v=wOwblaKmyVw'],
+                    ['DZIDZIO - Старі фотографії','3:33','https://www.youtube.com/watch?v=_Gx0ZyQSSpg'],
+                    ['Sound Choir Romania - Shchedryk','1:54','https://www.youtube.com/watch?v=cP5iHPOJKlk'],
+                    ['Pentatonix - Carol of the Bells','4:10','https://www.youtube.com/watch?v=WSUFzC6_fp8']
+            
+            );
 
 
-	        function getPlaylistDetails(){
+            var getPlaylist = function() {
+                var res = [];
 
-	        	var playlist = [];
+                for(var i = 0; i < tracks.length; i+=1) {
+                    res.push(tracks[i][2].substr(tracks[i][2].indexOf("=") + 1));
+                }
 
-		  		$.each(tracks, function(i) {
-		        	playlist.push('<li><a href="#"><div class="playlist-details"><div class="video-details"><span class="video-name">' +tracks[i][0] + '<span class="video-time">'+ tracks[i][1]+'</span></div><div class="video-img"><img src="http://img.youtube.com/vi/'+ getPlaylist()[i] +'/default.jpg"></div></div></a></li>');
-
-		  		}); 
-
-		  	 	$('.list').append( playlist.join('') );
-	        }
+                return res;
+            };
 
 
+            function getPlaylistDetails(videoID){
 
-	        var params = { allowScriptAccess: "always"};
-	        var atts = { id: "tubePlayer"};
-	        swfobject.embedSWF("http://www.youtube.com/apiplayer?enablejsapi=1&playerapiid=ytplayer&version=3&controls=1&showinfo=0", "tubePlayer", "425", "356", "8", null, null, params, atts);
+                var playlist = [];
+                var classfield;
 
-
-	        var player;
-	       	var PlaylistIdentifier = {};
-
-	        function onYouTubePlayerReady(id, iter) {
-	        	
-	        	if(iter == undefined){
-	        		iter = 0;
-	        	}
-	        	
-	        	PlaylistIdentifier['Number'] = iter;
-
-	            player=$("#tubePlayer").get(0);
-	            player.loadVideoById({'videoId': getPlaylist()[iter], 'startSeconds': 0,/* 'endSeconds': 0,*/ 'suggestedQuality': 'large'});
-	            player.addEventListener("onStateChange", "onytplayerStateChange");
-	        }//end onYouTubePlayerReady
-
-	    
-	        function onytplayerStateChange(newState) {
-	            if(newState === 0) {
-	                iter+=1;
-	                player.loadVideoById({'videoId': getPlaylist()[iter], 'startSeconds': 0, /*'endSeconds': 10,*/ 'suggestedQuality': 'large'});
-	                console.log(player.getCurrentTime());
-	            }
-	            if(newState === 2) {
-	                console.log("Current time is: " + player.getCurrentTime());
-	            }
-	        }
-
-	      
-
-	        function nextplay(){
-
-	        	nextNumber = PlaylistIdentifier['Number'] + 1;
-	        	
-	        	onYouTubePlayerReady('ytplayer', nextNumber);
-
-	        	getCurrentTime('Reset');
-
-	        }
+                $.each(tracks, function(i) {
+                	if(getPlaylist()[i] == videoID){
+                		classfield ='class="active"';
+                	} else {
+                		classfield="";
+                	}
 
 
-	        function previousplay(){
-	        	if(PlaylistIdentifier['Number'] != 0){
+                    playlist.push('<li '+classfield+'><a href="#"><div class="playlist-details"><div class="video-details"><span class="video-name">' +tracks[i][0] + '<span class="video-time">'+ tracks[i][1]+'</span></div><div class="video-img"><img src="http://img.youtube.com/vi/'+ getPlaylist()[i] +'/default.jpg" width="72"></div></div></a></li>');
 
-	        		previousNumber = PlaylistIdentifier['Number'] - 1;
+                }); 
 
-	        		onYouTubePlayerReady('ytplayer', previousNumber);
-
-	        		getCurrentTime('Reset');
-
-	        	} else {
-
-	        		alert('There are no video for previous');
-	        	}
-	        }
-
-	        function restartplay(){
-	        	
-	        	onYouTubePlayerReady('ytplayer', PlaylistIdentifier['Number']);
-
-	        	getCurrentTime('Reset');
-	        }
+                $('.list').html( playlist.join(''));
+            }
 
 
+            var params = { allowScriptAccess: "always"};
+            var atts = { id: "tubePlayer"};
+            swfobject.embedSWF("http://www.youtube.com/apiplayer?enablejsapi=1&playerapiid=ytplayer&version=3&controls=1&showinfo=0", "tubePlayer", "425", "356", "8", null, null, params, atts);
 
-	        var secInterval = 0;
+            var player;
+            var PlaylistIdentifier = {};
 
-	        var minutes = 0;
+            function onYouTubePlayerReady(id, iter) {
+                
+                if(iter == undefined){
+                    iter = 0;
+                    getPlaylistDetails(getPlaylist()[iter]);
+                }
+                
+                PlaylistIdentifier['Number'] = iter;
+                player=$("#tubePlayer").get(0);
+                player.loadVideoById({'videoId': getPlaylist()[iter], 'startSeconds': 0,/* 'endSeconds': 0,*/ 'suggestedQuality': 'large'});
+                player.addEventListener("onStateChange", "onytplayerStateChange");
+            }
 
-	        function getCurrentTime(status){
-	        	
-	    		if(status=='Reset'){
-	    			secInterval =0;
-	    			minutes = 0;
-	    		}
 
-	        	$('.CurrentTime').text(player.getCurrentTime());
+        
+            //function onytplayerStateChange(newState) {
+                //if(newState === 0) {
+                  //  iter+=1;
+                  //  player.loadVideoById({'videoId': getPlaylist()[iter], 'startSeconds': 0, /*'endSeconds': 10,*/ 'suggestedQuality': 'large'});
+                   // console.log(player.getCurrentTime());
+                //}
+               // if(newState === 2) {
+                //    console.log("Current time is: " + player.getCurrentTime());
+               // }
+           // }
 
-	        	$('.CurrentTime').each(function(){
-	        			
-	    	 		var getCurrentTime = $(this).text();
-	    	 		var LenghtTime = getCurrentTime.indexOf(".");
-	   	 			var getSeconds = getCurrentTime.substring(0, LenghtTime);
-	                
-	        			
-	                if(secInterval == 0){
-	                    secInterval = 60;
-	                }
+          
 
-	                if(getSeconds == secInterval){
-	                    secInterval = secInterval + 60;
-	                    ++minutes;
-	                }
+            function nextplay(){
 
-	                if(getSeconds > 59){
+                nextNumber = PlaylistIdentifier['Number'] + 1;
+                
+                onYouTubePlayerReady('ytplayer', nextNumber);
 
-	                     subValue = secInterval - 60;
+                getCurrentTime('Reset');
 
-	                } else {
+                getPlaylistDetails(getPlaylist()[nextNumber]);
 
-	                    subValue =0;
-	                }
+            }
 
-	                   
-	                Seconds =  getSeconds - subValue;
-	               
-	                if(Seconds <= 9){
 
-	                    Seconds = '0'+Seconds;
-	                }
+            function previousplay(){
 
-	                if(minutes == 1 && Seconds == 22){
-	                	alert('Video Time is: ' + minutes +':'+Seconds);
-	                }
+                if(PlaylistIdentifier['Number'] != 0){
 
-	                $('.VideoTime').text(minutes + ':' + Seconds);
-	    		});
-	           
-	        }
-	       
-	        var myTimer = setInterval(getCurrentTime,  1000);
-	        getPlaylistDetails();
-	       
-	    </script>
+                    previousNumber = PlaylistIdentifier['Number'] - 1;
+
+                    onYouTubePlayerReady('ytplayer', previousNumber);
+
+                    getPlaylistDetails(getPlaylist()[previousNumber]);
+
+                    getCurrentTime('Reset');
+
+                } else {
+
+                    alert('There are no video for previous');
+                }
+            }
+
+
+
+            function restartplay(){
+                
+                onYouTubePlayerReady('ytplayer', PlaylistIdentifier['Number']);
+
+                getCurrentTime('Reset');
+            }
+
+
+
+            var secInterval = 0;
+            var minutes = 0;
+
+            function getCurrentTime(status){
+                
+                if(status=='Reset'){
+                    secInterval =0;
+                    minutes = 0;
+                }
+
+                $('.CurrentTime').text(player.getCurrentTime());
+
+                $('.CurrentTime').each(function(){
+                        
+                    var getCurrentTime = $(this).text();
+                    var LenghtTime = getCurrentTime.indexOf(".");
+                    var getSeconds = getCurrentTime.substring(0, LenghtTime);
+                    
+                        
+                    if(secInterval == 0){
+                        secInterval = 60;
+                    }
+
+                    if(getSeconds == secInterval){
+                        secInterval = secInterval + 60;
+                        ++minutes;
+                    }
+
+                    if(getSeconds > 59){
+
+                         subValue = secInterval - 60;
+
+                    } else {
+
+                        subValue =0;
+                    }
+
+                       
+                    Seconds =  getSeconds - subValue;
+                   
+                    if(Seconds <= 9){
+
+                        Seconds = '0'+Seconds;
+                    }
+
+                    if(minutes == 1 && Seconds == 22){
+                        alert('Video Time is: ' + minutes +':'+Seconds);
+                    }
+
+                    $('.VideoTime').text(minutes + ':' + Seconds);
+                });
+               
+            }
+           
+            var myTimer = setInterval(getCurrentTime,  1000);
+        
+
+        </script>
 </html>
