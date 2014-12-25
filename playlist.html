@@ -37,17 +37,22 @@
             }
             .list{
                 list-style-type:none;
-              	padding: 0px;
+                padding: 0px;
             }
             .list li a{
                 text-decoration: none;
                 color: #fff;
             }
             .list li:hover{
-            	 background-color: #3a3a3a;
+                 background-color: #3a3a3a;
             }
-            .active{
-               background-color: #d9534f;
+            .activePlayed{
+                background-color: #d9534f;
+                pointer-events: none;
+                cursor: default;
+            }
+            .activeHighlight{
+                background-color: #4cae4c;
             }
             .playlist-details{
                 padding:10px 15px;
@@ -106,45 +111,53 @@
 
 
             var getVideoTime = function(){
-            	var videotime = [];
+                var videotime = [];
 
-            	for(var x =0; x < tracks.length; x+=1){
-            		videotime.push(tracks[x][1]);
-            	}
+                for(var x =0; x < tracks.length; x+=1){
+                    videotime.push(tracks[x][1]);
+                }
 
-            	return videotime;
+                return videotime;
             };
 
 
-            function getPlaylistDetails(videoID){
+
+
+            function getPlaylistDetails(videoID, videoStatus, currentPlay){
 
                 var playlist = [];
                 var classfield;
+                var clickstatus;
 
                 $.each(tracks, function(i) {
 
-                	if(getPlaylist()[i] == videoID){
-                		classfield ='class="active"';
+                    if((getPlaylist()[i] == videoID && videoStatus =="videoPlay") || (getPlaylist()[i] == currentPlay)){
+                        classfield ='class="activePlayed"';
+                        clickstatus ='';
 
-                	} else {
+                    } else if(getPlaylist()[i] == videoID && videoStatus == "videoHighLights") {
+                        classfield ='class="activeHighlight"';
+                        clickstatus ='ondblclick="clickPlaylist('+ i +'); return false;"';
 
-                		classfield="";
-                	}
+ 					 }else {
+                        classfield="";
+                        clickstatus='onclick="highLights('+i+')"';
 
-                    playlist.push('<li '+classfield+'> <a href="#" ondblclick="clickPlaylist('+ i +'); return false;"><div class="playlist-details"><div class="video-details"><span class="video-name">' +tracks[i][0] + '<span class="video-time">'+ tracks[i][1]+'</span></div><div class="video-img"><img src="http://img.youtube.com/vi/'+ getPlaylist()[i] +'/default.jpg" width="72"></div></div></a></li>');
+                    }
+
+                    playlist.push('<li '+classfield+'> <a href="#" '+ clickstatus +'><div class="playlist-details"><div class="video-details"><span class="video-name">' +tracks[i][0] + '<span class="video-time">'+ tracks[i][1]+'</span></div><div class="video-img"><img src="http://img.youtube.com/vi/'+ getPlaylist()[i] +'/default.jpg" width="72"></div></div></a></li>');
 
                 }); 
+
 
                 $('.list').html( playlist.join(''));
             }
 
 
 
-
             var params = { allowScriptAccess: "always"};
             var atts = { id: "tubePlayer"};
             swfobject.embedSWF("http://www.youtube.com/apiplayer?enablejsapi=1&playerapiid=ytplayer&version=3&controls=1&showinfo=0", "tubePlayer", "425", "356", "8", null, null, params, atts);
-
 
 
             var player;
@@ -154,7 +167,7 @@
                 
                 if(iter == undefined){
                     iter = 0;
-                    getPlaylistDetails(getPlaylist()[iter]);
+                    getPlaylistDetails(getPlaylist()[iter], 'videoPlay', '0');
                 }
                 
                 PlaylistIdentifier['Number'] = iter;
@@ -164,6 +177,7 @@
             }
 
        
+
 
             function onytplayerStateChange(newState) {
                 if(newState === 0) {
@@ -177,6 +191,7 @@
             }
 
 
+
             function nextplay(){
 
                 nextNumber = PlaylistIdentifier['Number'] + 1;
@@ -185,9 +200,10 @@
 
                 getCurrentTime('Reset');
 
-                getPlaylistDetails(getPlaylist()[nextNumber]);
+                getPlaylistDetails(getPlaylist()[nextNumber], 'videoPlay');
 
             }
+
 
 
             function previousplay(){
@@ -198,7 +214,7 @@
 
                     onYouTubePlayerReady('ytplayer', previousNumber);
 
-                    getPlaylistDetails(getPlaylist()[previousNumber]);
+                    getPlaylistDetails(getPlaylist()[previousNumber], 'videoPlay');
 
                     getCurrentTime('Reset');
 
@@ -225,11 +241,18 @@
 
                 getCurrentTime('Reset');
 
-                getPlaylistDetails(getPlaylist()[videoID]);
+                getPlaylistDetails(getPlaylist()[videoID], 'videoPlay');
             
             }
 
 
+
+            function highLights(videoID){
+
+               getPlaylistDetails(getPlaylist()[videoID], 'videoHighLights', getPlaylist()[PlaylistIdentifier['Number']]);
+
+            }
+            
 
             var secInterval = 0;
             var minutes = 0;
@@ -284,29 +307,27 @@
                         alert('Video Time is: ' + minutes +':'+Seconds);
                     }
 
-                    currentvideoTime = 	minutes + ':' + Seconds;
+                    currentvideoTime =  minutes + ':' + Seconds;
 
                     $('.VideoTime').text(currentvideoTime);
 
                    
-                   	if(currentvideoTime == getVideoTime()[PlaylistIdentifier['Number']]){
+                    if(currentvideoTime == getVideoTime()[PlaylistIdentifier['Number']]){
 
-                   		nextNumber = PlaylistIdentifier['Number'] + 1;
+                        nextNumber = PlaylistIdentifier['Number'] + 1;
                 
-               			onYouTubePlayerReady('ytplayer', nextNumber);
+                        onYouTubePlayerReady('ytplayer', nextNumber);
 
-               			getPlaylistDetails(getPlaylist()[nextNumber]);
+                        getPlaylistDetails(getPlaylist()[nextNumber], 'videoPlay');
 
-               			minutes = 0;
-               			secInterval =0;
-               			Seconds =0;
-                   	}
+                        minutes = 0;
+                        secInterval =0;
+                        Seconds =0;
+                    }
 
                 });
                
             }
-           
-
 
             var myTimer = setInterval(getCurrentTime,  1000);
         
