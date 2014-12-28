@@ -37,17 +37,22 @@
             }
             .list{
                 list-style-type:none;
-              	padding: 0px;
+                padding: 0px;
             }
             .list li a{
                 text-decoration: none;
                 color: #fff;
             }
             .list li:hover{
-            	 background-color: #3a3a3a;
+                 background-color: #3a3a3a;
             }
-            .active{
-               background-color: #d9534f;
+            .activePlayed{
+                background-color: #d9534f;
+                pointer-events: none;
+                cursor: default;
+            }
+            .activeHighlight{
+                background-color: #4cae4c;
             }
             .playlist-details{
                 padding:10px 15px;
@@ -61,7 +66,7 @@
         <div class="container">
             <div class="header">
                 <div class="nav-btns">
-                    <button onclick="player.pauseVideo()">Pause</button>
+                    <button onclick="player.pauseVideo(); PauseVideo();">Pause</button>
                     <button onclick="player.playVideo()">Start</button>
                     <button onclick="restartplay()">Restart</button>
                     <button onclick="previousplay()">Previous</button>
@@ -106,34 +111,43 @@
 
 
             var getVideoTime = function(){
-            	var videotime = [];
+                var videotime = [];
+                for(var x =0; x < tracks.length; x+=1){
+                    videotime.push(tracks[x][1]);
+                }
 
-            	for(var x =0; x < tracks.length; x+=1){
-            		videotime.push(tracks[x][1]);
-            	}
-
-            	return videotime;
+                return videotime;
             };
 
 
-            function getPlaylistDetails(videoID){
+
+
+            function getPlaylistDetails(videoID, videoStatus, currentPlay){
 
                 var playlist = [];
                 var classfield;
+                var clickstatus;
 
                 $.each(tracks, function(i) {
 
-                	if(getPlaylist()[i] == videoID){
-                		classfield ='class="active"';
+                    if((getPlaylist()[i] == videoID && videoStatus =="videoPlay") || (getPlaylist()[i] == currentPlay)){
+                        classfield ='class="activePlayed"';
+                        clickstatus ='';
 
-                	} else {
+                    } else if(getPlaylist()[i] == videoID && videoStatus == "videoHighLights") {
+                        classfield ='class="activeHighlight"';
+                        clickstatus ='ondblclick="clickPlaylist('+ i +'); return false;"';
 
-                		classfield="";
-                	}
+                    } else {
+                        classfield="";
+                        clickstatus='onclick="highLights('+i+')"';
 
-                    playlist.push('<li '+classfield+'> <a href="#" ondblclick="clickPlaylist('+ i +'); return false;"><div class="playlist-details"><div class="video-details"><span class="video-name">' +tracks[i][0] + '<span class="video-time">'+ tracks[i][1]+'</span></div><div class="video-img"><img src="http://img.youtube.com/vi/'+ getPlaylist()[i] +'/default.jpg" width="72"></div></div></a></li>');
+                    }
+
+                    playlist.push('<li '+classfield+'> <a href="#" '+ clickstatus +'><div class="playlist-details"><div class="video-details"><span class="video-name">' +tracks[i][0] + '<span class="video-time">'+ tracks[i][1]+'</span></div><div class="video-img"><img src="http://img.youtube.com/vi/'+ getPlaylist()[i] +'/default.jpg" width="72"></div></div></a></li>');
 
                 }); 
+
 
                 $('.list').html( playlist.join(''));
             }
@@ -154,21 +168,22 @@
                 
                 if(iter == undefined){
                     iter = 0;
-                    getPlaylistDetails(getPlaylist()[iter]);
+                    getPlaylistDetails(getPlaylist()[iter], 'videoPlay', '0');
                 }
                 
                 PlaylistIdentifier['Number'] = iter;
+                setInterVal();
                 player=$("#tubePlayer").get(0);
                 player.loadVideoById({'videoId': getPlaylist()[iter], 'startSeconds': 0,/* 'endSeconds': 0,*/ 'suggestedQuality': 'large'});
                 player.addEventListener("onStateChange", "onytplayerStateChange");
             }
 
-       
+
 
             function onytplayerStateChange(newState) {
                 if(newState === 0) {
                     iter+=1;
-                    player.loadVideoById({'videoId': getPlaylist()[iter], 'startSeconds': 0, /*'endSeconds': 10,*/ 'suggestedQuality': 'large'});
+                   player.loadVideoById({'videoId': getPlaylist()[iter], 'startSeconds': 0, /*'endSeconds': 10,*/ 'suggestedQuality': 'large'});
                     console.log(player.getCurrentTime());
                 }
                 if(newState === 2) {
@@ -177,17 +192,51 @@
             }
 
 
+          
+            function PauseVideo(){
+
+                 $('.CurrentTime').each(function(){
+                        
+                   var LenghtTime = $(this).text().indexOf(".");
+                   var CurrentVideoTime = $(this).text().substring(0, LenghtTime);
+                   var PlaylistNumber = tracks.length - 1;
+
+                   if(CurrentVideoTime >= 81){
+
+                        if(PlaylistIdentifier['Number'] < PlaylistNumber){
+
+                            alert('Next Video: ' + tracks[PlaylistIdentifier['Number']+1][0] + ' - ' + tracks[PlaylistIdentifier['Number']+1][1]);
+
+                        } else {
+
+                         //Alert show when there is no video for next.
+
+                        }
+                   }
+
+                });
+            }
+
+
+
             function nextplay(){
 
-                nextNumber = PlaylistIdentifier['Number'] + 1;
-                
-                onYouTubePlayerReady('ytplayer', nextNumber);
+                var PlaylistNumber = tracks.length - 1;
 
-                getCurrentTime('Reset');
+                if(PlaylistIdentifier['Number'] < PlaylistNumber){
 
-                getPlaylistDetails(getPlaylist()[nextNumber]);
+                    nextNumber = PlaylistIdentifier['Number'] + 1;
+                    onYouTubePlayerReady('ytplayer', nextNumber);
+                    getCurrentTime('Reset');
+                    getPlaylistDetails(getPlaylist()[nextNumber], 'videoPlay');
+
+                } else {    
+                    alert('There are no video for next');
+                }
+               
 
             }
+
 
 
             function previousplay(){
@@ -195,11 +244,8 @@
                 if(PlaylistIdentifier['Number'] != 0){
 
                     previousNumber = PlaylistIdentifier['Number'] - 1;
-
                     onYouTubePlayerReady('ytplayer', previousNumber);
-
-                    getPlaylistDetails(getPlaylist()[previousNumber]);
-
+                    getPlaylistDetails(getPlaylist()[previousNumber], 'videoPlay');
                     getCurrentTime('Reset');
 
                 } else {
@@ -210,23 +256,25 @@
 
 
 
-            function restartplay(){
-                
-                onYouTubePlayerReady('ytplayer', PlaylistIdentifier['Number']);
 
+            function restartplay(){
+                onYouTubePlayerReady('ytplayer', PlaylistIdentifier['Number']);
                 getCurrentTime('Reset');
             }
 
 
 
             function clickPlaylist(videoID){
-
                 onYouTubePlayerReady('ytplayer', videoID);
-
                 getCurrentTime('Reset');
-
-                getPlaylistDetails(getPlaylist()[videoID]);
+                getPlaylistDetails(getPlaylist()[videoID], 'videoPlay');
             
+            }
+
+
+
+            function highLights(videoID){
+               getPlaylistDetails(getPlaylist()[videoID], 'videoHighLights', getPlaylist()[PlaylistIdentifier['Number']]);
             }
 
 
@@ -235,13 +283,10 @@
             var minutes = 0;
             var currentvideoTime;
 
+
+
             function getCurrentTime(status){
                 
-                if(status=='Reset'){
-                    secInterval =0;
-                    minutes = 0;
-                }
-
                 $('.CurrentTime').text(player.getCurrentTime());
 
                 $('.CurrentTime').each(function(){
@@ -249,10 +294,18 @@
                     var getCurrentTime = $(this).text();
                     var LenghtTime = getCurrentTime.indexOf(".");
                     var getSeconds = getCurrentTime.substring(0, LenghtTime);
+
+                     if(status=='Reset'){
+                        secInterval =0;
+                        minutes = 0;
+                        getSeconds =0;
+                     }
+
                         
                     if(secInterval == 0){
                         secInterval = 60;
                     }
+
 
                     if(getSeconds == secInterval){
                         secInterval = secInterval + 60;
@@ -260,11 +313,9 @@
                     }
 
                     if(getSeconds > 59){
-
-                         subValue = secInterval - 60;
+                        subValue = secInterval - 60;
 
                     } else {
-
                         subValue =0;
                     }
 
@@ -273,42 +324,52 @@
 
                    
                     if(Seconds <= 9){
-
                         Seconds = '0'+Seconds;
                     }
 
 
-
                     if(minutes == 1 && Seconds == 22){
+                       
+                        alert('Next Video: ' + tracks[PlaylistIdentifier['Number']+1][0] + ' - ' + tracks[PlaylistIdentifier['Number']+1][1]);
                         
-                        alert('Video Time is: ' + minutes +':'+Seconds);
-                    }
+                    } 
 
-                    currentvideoTime = 	minutes + ':' + Seconds;
+                    currentvideoTime =  minutes + ':' + Seconds;
 
                     $('.VideoTime').text(currentvideoTime);
 
                    
-                   	if(currentvideoTime == getVideoTime()[PlaylistIdentifier['Number']]){
+                    if(currentvideoTime == getVideoTime()[PlaylistIdentifier['Number']]){
+                    	var PlaylistNumber = tracks.length - 1;
 
-                   		nextNumber = PlaylistIdentifier['Number'] + 1;
-                
-               			onYouTubePlayerReady('ytplayer', nextNumber);
+                    	if(PlaylistIdentifier['Number'] < PlaylistNumber){
 
-               			getPlaylistDetails(getPlaylist()[nextNumber]);
+                    		nextNumber = PlaylistIdentifier['Number'] + 1;
+	                        onYouTubePlayerReady('ytplayer', nextNumber);
+	                        getPlaylistDetails(getPlaylist()[nextNumber], 'videoPlay');
 
-               			minutes = 0;
-               			secInterval =0;
-               			Seconds =0;
-                   	}
+	                        minutes = 0;
+	                        secInterval =0;
+	                        Seconds =0;
+
+                    	} else {
+
+                    		clearInterval(myTimer);
+
+                    	}
+                        
+                    }
+
 
                 });
-               
             }
-           
 
+            
 
-            var myTimer = setInterval(getCurrentTime,  1000);
+            function setInterVal(){
+            	 var myTimer = setInterval(getCurrentTime,  1000);
+            }
+            
         
         </script>
 </html>
