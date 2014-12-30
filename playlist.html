@@ -124,6 +124,7 @@
             };
 
 
+
             function getPlaylistDetails(videoID, videoStatus, currentPlay){
 
                 var playlist = [];
@@ -155,7 +156,6 @@
 
 
 
-
             var params = { allowScriptAccess: "always"};
             var atts = { id: "tubePlayer"};
             swfobject.embedSWF("http://www.youtube.com/apiplayer?enablejsapi=1&playerapiid=ytplayer&version=3&controls=1&showinfo=0", "tubePlayer", "425", "356", "8", null, null, params, atts);
@@ -170,8 +170,10 @@
                     iter = 0;
                     getPlaylistDetails(getPlaylist()[iter], 'videoPlay', '0');
                 }
-                
+
+               
                 PlaylistIdentifier['Number'] = iter;
+                videoSelected.splice($.inArray(getPlaylist()[PlaylistIdentifier['Number']], videoSelected),1);
                 setInterVal();
                 player=$("#tubePlayer").get(0);
                 player.loadVideoById({'videoId': getPlaylist()[iter], 'startSeconds': 0,/* 'endSeconds': 0,*/ 'suggestedQuality': 'large'});
@@ -211,6 +213,7 @@
 
                         }
                    }
+                   alert(getPlaylist()[PlaylistIdentifier['Number']]);
 
                 });
             }
@@ -262,6 +265,7 @@
                 onYouTubePlayerReady('ytplayer', videoID);
                 getCurrentTime('Reset');
                 getPlaylistDetails(getPlaylist()[videoID], 'videoPlay');
+
             }
 
 
