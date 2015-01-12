@@ -85,7 +85,8 @@
                 </ul>
             </div>
         </div>
-        <div class="lyrics"></div>
+        <div class="lyrics" id="ss"></div>
+        <div id="sampletext"></div>
     </body>
     <script type="text/javascript">
 
@@ -100,32 +101,83 @@
             );
 
             var Lyrics = new Array(
+            	['','0:00'],
             	['Kinda get broken when it comes to emotion makes me start chokin so I sit by the ocean','0:06'],
             	['I spent my last buck on a bottle o whiskey drunk and broke sittin here in history','0:12'],
             	["I made my mind up how I'm goin got no where to go don't know where I'm goin",'0:18'],
             	["I do know one thing that is true wherever I go I'm gonna need you",'0:24'],
             	["we just can't let each other go now we're to close to ever slow down",'0:30'],
-            	["the only one who keeps my chin up when you touch my lips we're like two dogs stuck",'0:36'],
+            	["the only one who keeps my chin up when you touch my lips we're like two dogs stuck",'0:37'],
             	["cold, cold beer don't you ever worry I am right here never live without you (you) dont care what I amount to",'0:48'],
-            	["talkin bout cold cold beer don't you ever worry im right here never live without you",'0:00']
+            	["talkin bout cold cold beer don't you ever worry Im right here never live without you",'1:01'],
+            	["I pick you up I take you home sit on my couch turn off my phone",'1:07'],
+            	["cause I love your taste love your smell who'd ve ever thought that we could do so well hell",'1:14'],
+            	["I guess we're meant for each other so like the microphone and my buddy Bruce Buffer, I can't really express my joy",'1:22'],
+            	["so like a scrap between so good and patty roy I cant take my eyes off you",'1:28'],
+            	["went to rehab thought that I lost you now we're back together with a vengence must be my little irish decendence",'1:38'],
+            	["feels pretty good to get this off my chest even though people sayin (singer's name)'s obsessed",'1:44'],
+            	["maybe I am maybe they're right all I know is one thing it was love at first sight",'1:50'],
+            	["cold, cold beer don't you ever worry I am right here never live without you I wouldn't even want to",'2:02'],
+            	["cold, cold beer don't you ever worry I am right here never live without you You dont care what I amount to",'2:27'],
+            	["Well I'm sittin on the stoop feelin kinda lonely me and brenda fightin so i call up the homies",'2:34'],
+            	["boys busy hangin out in front of soby's there's only one little fella that really knows me",'2:40'],
+            	["He comes in a little brown bottle or can sits in my hand till I can barely stand",'2:46'],
+            	["part of the fam part of the team took me under his wing when I was just a teen",'2:52'],
+            	["every time he come around it always takes me back to when I had a fake id and a little dirt stash",'2:59'],
+            	["get a road so cold pop two for a whop top twist off pop top tall boy cold shot",'3:05'],
+            	["beer, cold beer don't you ever worry I am right here never live without you You dont care what I amount to",'3:18'],
+            	["cold, cold beer don't you ever worry I am right here I could never live without you I wouldn't even want to",'3:39']
 
             );
 
-            var y=0;
+			var nextlyrics=0;
 
             function showlyrics(){
            
             	$('.VideoTime').each(function(){
             		Seconds = $(this).text();
-
-            		if(Lyrics[y][1] == Seconds){
-            			y++;
+            		if(Lyrics[nextlyrics][1] == Seconds){
+            			cc = 0;
+            			nextlyrics++;
+            			lyricshighlights(nextlyrics);
             		}
 
-            		$('.lyrics').text(Lyrics[y][0]);
+            		$('.lyrics').html(Lyrics[nextlyrics][0]);
             	});
             
             }
+
+
+			var songtext = [];
+			var text="";
+
+			function lyricshighlights(nextlyrics){
+				
+				if(nextlyrics > 0){
+					songtext.length = 0; 
+				}
+				var value = Lyrics[nextlyrics][0].split("");
+     			 for(var i=0;i<value.length;i++) {
+          			songtext.push([value[i], 150]);
+     			}
+    			$.each(songtext, function(a, b) {
+        			text += "<span id='p"+a+"' style='color:#000'>" + b[0] + "</span>";
+    			});
+    
+    			$('#sampletext').html(text);
+    			nextWord();
+			}
+
+
+			var cc = 0;
+			function nextWord() {
+				 
+    			$('#p'+cc).css("background-color", "green");
+   				 cc++;
+    			if(cc> songtext.length-1) return;
+    			window.setTimeout(nextWord, songtext[cc-1][1]);
+
+			}
 
 
             var getPlaylist = function() {
@@ -375,6 +427,7 @@
             function setInterVal(){
             	var myTimer 	= setInterval(getCurrentTime,  1000);
             	var videoLyrics = setInterval(showlyrics,  1000);
+            	//lyricshighlights();
 
             }
 
