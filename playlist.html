@@ -85,8 +85,7 @@
                 </ul>
             </div>
         </div>
-        <div class="lyrics" id="ss"></div>
-        <div id="sampletext"></div>
+        <div class="lyrics"></div>
     </body>
     <script type="text/javascript">
 
@@ -131,52 +130,43 @@
             );
 
 			var nextlyrics=0;
+			
 
-            function showlyrics(){
+            function VideoTime(){
            
             	$('.VideoTime').each(function(){
-            		Seconds = $(this).text();
-            		if(Lyrics[nextlyrics][1] == Seconds){
-            			cc = 0;
-            			nextlyrics++;
-            			lyricshighlights(nextlyrics);
-            		}
+            		videotime = $(this).text();
 
-            		$('.lyrics').html(Lyrics[nextlyrics][0]);
+        			if(videotime >= Lyrics[nextlyrics][1]){
+            			highlightnext = 0;
+            			nextlyrics++;
+            			NextLyrics(nextlyrics);
+        			}	
             	});
-            
             }
 
 
-			var songtext = [];
-			var text="";
-
-			function lyricshighlights(nextlyrics){
+			function NextLyrics(nextlyrics){
 				
-				if(nextlyrics > 0){
-					songtext.length = 0; 
-				}
-				var value = Lyrics[nextlyrics][0].split("");
-     			 for(var i=0;i<value.length;i++) {
-          			songtext.push([value[i], 150]);
+				var text ="";
+				var lyrics = Lyrics[nextlyrics][0].split("");
+   				 
+     			 for(var i=0;i<lyrics.length;i++) {
+          			text += "<span id='p"+i+"' style='color:#000'>" + lyrics[i] + "</span>";
      			}
-    			$.each(songtext, function(a, b) {
-        			text += "<span id='p"+a+"' style='color:#000'>" + b[0] + "</span>";
-    			});
-    
-    			$('#sampletext').html(text);
-    			nextWord();
+     			
+    			$('.lyrics').html(text);
+    			lyricshighlights();
 			}
 
-
-			var cc = 0;
-			function nextWord() {
+			var highlightnext= 0;
+			
+			function lyricshighlights() {
 				 
-    			$('#p'+cc).css("background-color", "green");
-   				 cc++;
-    			if(cc> songtext.length-1) return;
-    			window.setTimeout(nextWord, songtext[cc-1][1]);
-
+    			$('#p'+highlightnext).css("background-color", "green");
+   				 highlightnext++;
+    			
+    			window.setTimeout(lyricshighlights, 200);
 			}
 
 
@@ -426,8 +416,8 @@
             
             function setInterVal(){
             	var myTimer 	= setInterval(getCurrentTime,  1000);
-            	var videoLyrics = setInterval(showlyrics,  1000);
-            	//lyricshighlights();
+            	var videoLyrics = setInterval(VideoTime,  1000);
+           
 
             }
 
