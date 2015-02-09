@@ -60,6 +60,7 @@
             .video-time{
                 float: right;
             }
+
             
         </style>
     </head>
@@ -86,23 +87,22 @@
             </div>
         </div>
         <div class="lyrics"></div>
-        <audio id="audiomusic" src="Florida Georgia Line - Stay.mp3"></audio>
-		<div>
-		  <button onclick="document.getElementById('audiomusic').play()">Play MP3 audio</button>
-		  <button onclick="document.getElementById('audiomusic').pause()">Pause MP3 Audio</button>
-		</div>
+        <audio id="audio" type="audio/mpeg"> Sorry, your browser does not support HTML5 audio.</audio>
+	    <ul id="Mp3PlayList">  
+	    </ul>
 
     </body>
     <script type="text/javascript">
 
             var tracks = new Array(
      
-                ['Jesse Stewart - Cold Beer','3:39','https://www.youtube.com/watch?v=ZEvQOPUHGH8'],
-                ['Miley Cyrus - Jolene', '2:59', 'https://www.youtube.com/watch?v=wOwblaKmyVw'],
-                ['DZIDZIO - Старі фотографії','3:33','https://www.youtube.com/watch?v=_Gx0ZyQSSpg'],
-                ['Sound Choir Romania - Shchedryk','1:54','https://www.youtube.com/watch?v=cP5iHPOJKlk'],
-                ['Pentatonix - Carol of the Bells','4:10','https://www.youtube.com/watch?v=WSUFzC6_fp8']
-            
+                [1, 'Jesse Stewart - Cold Beer','3:39','https://www.youtube.com/watch?v=ZEvQOPUHGH8'],
+                [1, 'Miley Cyrus - Jolene', '2:59', 'https://www.youtube.com/watch?v=wOwblaKmyVw'],
+                [1, 'DZIDZIO - Старі фотографії','3:33','https://www.youtube.com/watch?v=_Gx0ZyQSSpg'],
+                [1, 'Sound Choir Romania - Shchedryk','1:54','https://www.youtube.com/watch?v=cP5iHPOJKlk'],
+                [1, 'Pentatonix - Carol of the Bells','4:10','https://www.youtube.com/watch?v=WSUFzC6_fp8'],
+                [2, 'Jesse Stewart - Cold Beer', '4:16', 'http://www.jessedirtybeer.com/Cold_Beer_-_Deep_in_Cider.mp3'],
+                [2, 'Miley Cyrus - Jolene', '3:00', 'http://a.tumblr.com/tumblr_mfn9fwHbsY1qa3rujo1.mp3']
             );
 
             var Lyrics = new Array(
@@ -135,9 +135,58 @@
 
             );
 
+			 function Mp3List(){
+
+                var mp3PlayList = [];
+                var c =0;
+                $.each(tracks, function(i) {
+                    if(tracks[i][0] == 2){
+                        mp3PlayList.push('<li><a href="'+tracks[i][3]+'">'+tracks[i][1]+'</a></li>');
+                    }
+                    c++;
+                });
+                $('#Mp3PlayList').html(mp3PlayList.join(''));
+            }
+
+            Mp3List();
+			getMp3Source();
+			
+			function getMp3Source(){
+			    current = 0;
+			    audio = $('audio');
+			    mp3playlist = $('#Mp3PlayList');
+			    mp3tracks = mp3playlist.find('li a');
+			    len = mp3tracks.length - 1;
+			    audio[0].volume = .90;
+			    mp3playlist.find('a').click(function(e){
+			        e.preventDefault();
+			        link = $(this);
+			        current = link.parent().index();
+			        PlayMp3(link, audio[0]);
+			    });
+			    audio[0].addEventListener('ended',function(e){
+			        current++;
+			        if(current == len){
+			            current = 0;
+			            link = mp3playlist.find('a')[0];
+			        }else{
+			            link = mp3playlist.find('a')[current];    
+			        }
+			        PlayMp3($(link),audio[0]);
+			    });
+			}
+			function PlayMp3(link, player){
+			        player.src = link.attr('href');
+			        par = link.parent();
+			        par.addClass('active').siblings().removeClass('active');
+			        audio[0].load();
+			        audio[0].play();
+			        PauseVideo();
+			}
+
+          
 			var nextlyrics=0;
 			
-
             function VideoTime(){
            
             	$('.VideoTime').each(function(){
@@ -151,7 +200,6 @@
             	});
             }
 
-
 			function NextLyrics(nextlyrics){
 				
 				var text ="";
@@ -160,37 +208,35 @@
      			 for(var i=0;i<lyrics.length;i++) {
           			text += "<span id='p"+i+"' style='color:#000'>" + lyrics[i] + "</span>";
      			}
-     			
     			$('.lyrics').html(text);
     			lyricshighlights();
 			}
 
 			var highlightnext= 0;
-			
+
 			function lyricshighlights() {
-				 
     			$('#p'+highlightnext).css("background-color", "green");
    				 highlightnext++;
-    			
     			window.setTimeout(lyricshighlights, 200);
 			}
 
 
             var getPlaylist = function() {
                 var res = [];
-
                 for(var i = 0; i < tracks.length; i+=1) {
-                    res.push(tracks[i][2].substr(tracks[i][2].indexOf("=") + 1));
+                	if(tracks[i][0] == 1){
+                		res.push(tracks[i][3].substr(tracks[i][3].indexOf("=") + 1));
+                	}
                 }
-
                 return res;
             };
 
 
             var getVideoTime = function(){
                 var videotime = [];
+
                 for(var x =0; x < tracks.length; x+=1){
-                    videotime.push(tracks[x][1]);
+                    videotime.push(tracks[x][2]);
                 }
 
                 return videotime;
@@ -207,24 +253,30 @@
                 $.each(tracks, function(i) {
 
                     if((getPlaylist()[i] == videoID && videoStatus =="videoPlay") || (getPlaylist()[i] == currentPlay)){
+
                         classfield ='class="activePlayed"';
                         clickstatus ='';
+
                     } else if($.inArray(getPlaylist()[i], videoSelected) !== -1) {
 
                         classfield ='class="activeHighlight"';
                         clickstatus ='ondblclick="clickPlaylist('+ i +'); return false;"';
 
                     } else {
+
                         classfield="";
                         clickstatus='onclick="highLights('+i+')"';
                     }
 
-                    playlist.push('<li '+classfield+'> <a href="#" '+ clickstatus +'><div class="playlist-details"><div class="video-details"><span class="video-name">' +tracks[i][0] + '<span class="video-time">'+ tracks[i][1]+'</span></div><div class="video-img"><img src="http://img.youtube.com/vi/'+ getPlaylist()[i] +'/default.jpg" width="72"></div></div></a></li>');
+                    if(tracks[i][0] == 1){
+
+                    	  playlist.push('<li '+classfield+'> <a href="#" '+ clickstatus +'> <div class="playlist-details"><div class="video-details"><span class="video-name">' +tracks[i][1]+ '<span class="video-time">'+tracks[i][2]+'</span></div><div class="video-img"><img src="http://img.youtube.com/vi/'+ tracks[i][3].substr(tracks[i][3].indexOf("=") + 1) +'/default.jpg" width="72"></div></div></a></li>');
+                    } 
+
                 }); 
 
                 $('.list').html( playlist.join(''));
             }
-
 
 
             var params = { allowScriptAccess: "always"};
@@ -253,16 +305,16 @@
 
 
 
-            function onytplayerStateChange(newState) {
-                if(newState === 0) {
-                   iter+=1;
-                   player.loadVideoById({'videoId': getPlaylist()[iter], 'startSeconds': 0, /*'endSeconds': 10,*/ 'suggestedQuality': 'large'});
-                    console.log(player.getCurrentTime());
-                }
-                if(newState === 2) {
-                    console.log("Current time is: " + player.getCurrentTime());
-               }
-            }
+            //function onytplayerStateChange(newState) {
+               //if(newState === 0) {
+                 //  iter+=1;
+                //   player.loadVideoById({'videoId': getPlaylist()[iter], 'startSeconds': 0, /*'endSeconds': 10,*/ 'suggestedQuality': 'large'});
+                //    console.log(player.getCurrentTime());
+               // }
+               // if(newState === 2) {
+               //     console.log("Current time is: " + player.getCurrentTime());
+               //}
+            //}
 
 
           
@@ -276,7 +328,7 @@
 
                    if(CurrentVideoTime >= 81){
                         if(PlaylistIdentifier['Number'] < PlaylistNumber){
-                            alert('Next Video: ' + tracks[PlaylistIdentifier['Number']+1][0] + ' - ' + tracks[PlaylistIdentifier['Number']+1][1]);
+                            alert('Next Video: ' + tracks[PlaylistIdentifier['Number']+1][1] + ' - ' + tracks[PlaylistIdentifier['Number']+1][2]);
                         } 
                     }
                 });
@@ -392,7 +444,7 @@
 
 
                     if(minutes == 1 && Seconds == 22){
-                        alert('Next Video: ' + tracks[PlaylistIdentifier['Number']+1][0] + ' - ' + tracks[PlaylistIdentifier['Number']+1][1]);
+                        alert('Next Video: ' + tracks[PlaylistIdentifier['Number']+1][1] + ' - ' + tracks[PlaylistIdentifier['Number']+1][2]);
                     } 
 
                     currentvideoTime =  minutes + ':' + Seconds;
@@ -418,11 +470,11 @@
             }
 
             
-
-            
+        
             function setInterVal(){
             	var myTimer 	= setInterval(getCurrentTime,  1000);
             	var videoLyrics = setInterval(VideoTime,  1000);
+
            
 
             }
