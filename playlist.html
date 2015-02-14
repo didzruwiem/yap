@@ -82,14 +82,11 @@
                 You may or may not need Flash Player something or other and JavaScript enabled to blow up the enterprise.
             </div>
             <div class="playlist">
-                <ul class="list">
+                <ul class="list" id="list">
                 </ul>
             </div>
         </div>
         <div class="lyrics"></div>
-        <audio id="audio" type="audio/mpeg"> Sorry, your browser does not support HTML5 audio.</audio>
-	    <ul id="Mp3PlayList">  
-	    </ul>
 
     </body>
     <script type="text/javascript">
@@ -102,131 +99,83 @@
                 [1, 'Sound Choir Romania - Shchedryk','1:54','https://www.youtube.com/watch?v=cP5iHPOJKlk'],
                 [1, 'Pentatonix - Carol of the Bells','4:10','https://www.youtube.com/watch?v=WSUFzC6_fp8'],
                 [2, 'Jesse Stewart - Cold Beer', '4:16', 'http://www.jessedirtybeer.com/Cold_Beer_-_Deep_in_Cider.mp3'],
-                [2, 'Miley Cyrus - Jolene', '3:00', 'http://a.tumblr.com/tumblr_mfn9fwHbsY1qa3rujo1.mp3']
+                [2, 'Zac Brown Band - Toes', '4:18', 'http://onlinekaraoke.tv/assets/songs/55000-55999/55258-toes-zac-brown-band--1411581094.mp3']
             );
 
             var Lyrics = new Array(
-            	['','0:00'],
-            	['Kinda get broken when it comes to emotion makes me start chokin so I sit by the ocean','0:06'],
-            	['I spent my last buck on a bottle o whiskey drunk and broke sittin here in history','0:12'],
-            	["I made my mind up how I'm goin got no where to go don't know where I'm goin",'0:18'],
-            	["I do know one thing that is true wherever I go I'm gonna need you",'0:24'],
-            	["we just can't let each other go now we're to close to ever slow down",'0:30'],
-            	["the only one who keeps my chin up when you touch my lips we're like two dogs stuck",'0:37'],
-            	["cold, cold beer don't you ever worry I am right here never live without you (you) dont care what I amount to",'0:48'],
-            	["talkin bout cold cold beer don't you ever worry Im right here never live without you",'1:01'],
-            	["I pick you up I take you home sit on my couch turn off my phone",'1:07'],
-            	["cause I love your taste love your smell who'd ve ever thought that we could do so well hell",'1:14'],
-            	["I guess we're meant for each other so like the microphone and my buddy Bruce Buffer, I can't really express my joy",'1:22'],
-            	["so like a scrap between so good and patty roy I cant take my eyes off you",'1:28'],
-            	["went to rehab thought that I lost you now we're back together with a vengence must be my little irish decendence",'1:38'],
-            	["feels pretty good to get this off my chest even though people sayin (singer's name)'s obsessed",'1:44'],
-            	["maybe I am maybe they're right all I know is one thing it was love at first sight",'1:50'],
-            	["cold, cold beer don't you ever worry I am right here never live without you I wouldn't even want to",'2:02'],
-            	["cold, cold beer don't you ever worry I am right here never live without you You dont care what I amount to",'2:27'],
-            	["Well I'm sittin on the stoop feelin kinda lonely me and brenda fightin so i call up the homies",'2:34'],
-            	["boys busy hangin out in front of soby's there's only one little fella that really knows me",'2:40'],
-            	["He comes in a little brown bottle or can sits in my hand till I can barely stand",'2:46'],
-            	["part of the fam part of the team took me under his wing when I was just a teen",'2:52'],
-            	["every time he come around it always takes me back to when I had a fake id and a little dirt stash",'2:59'],
-            	["get a road so cold pop two for a whop top twist off pop top tall boy cold shot",'3:05'],
-            	["beer, cold beer don't you ever worry I am right here never live without you You dont care what I amount to",'3:18'],
-            	["cold, cold beer don't you ever worry I am right here I could never live without you I wouldn't even want to",'3:39']
+                ['','0:00'],
+                ['Kinda get broken when it comes to emotion makes me start chokin so I sit by the ocean','0:06'],
+                ['I spent my last buck on a bottle o whiskey drunk and broke sittin here in history','0:12'],
+                ["I made my mind up how I'm goin got no where to go don't know where I'm goin",'0:18'],
+                ["I do know one thing that is true wherever I go I'm gonna need you",'0:24'],
+                ["we just can't let each other go now we're to close to ever slow down",'0:30'],
+                ["the only one who keeps my chin up when you touch my lips we're like two dogs stuck",'0:37'],
+                ["cold, cold beer don't you ever worry I am right here never live without you (you) dont care what I amount to",'0:48'],
+                ["talkin bout cold cold beer don't you ever worry Im right here never live without you",'1:01'],
+                ["I pick you up I take you home sit on my couch turn off my phone",'1:07'],
+                ["cause I love your taste love your smell who'd ve ever thought that we could do so well hell",'1:14'],
+                ["I guess we're meant for each other so like the microphone and my buddy Bruce Buffer, I can't really express my joy",'1:22'],
+                ["so like a scrap between so good and patty roy I cant take my eyes off you",'1:28'],
+                ["went to rehab thought that I lost you now we're back together with a vengence must be my little irish decendence",'1:38'],
+                ["feels pretty good to get this off my chest even though people sayin (singer's name)'s obsessed",'1:44'],
+                ["maybe I am maybe they're right all I know is one thing it was love at first sight",'1:50'],
+                ["cold, cold beer don't you ever worry I am right here never live without you I wouldn't even want to",'2:02'],
+                ["cold, cold beer don't you ever worry I am right here never live without you You dont care what I amount to",'2:27'],
+                ["Well I'm sittin on the stoop feelin kinda lonely me and brenda fightin so i call up the homies",'2:34'],
+                ["boys busy hangin out in front of soby's there's only one little fella that really knows me",'2:40'],
+                ["He comes in a little brown bottle or can sits in my hand till I can barely stand",'2:46'],
+                ["part of the fam part of the team took me under his wing when I was just a teen",'2:52'],
+                ["every time he come around it always takes me back to when I had a fake id and a little dirt stash",'2:59'],
+                ["get a road so cold pop two for a whop top twist off pop top tall boy cold shot",'3:05'],
+                ["beer, cold beer don't you ever worry I am right here never live without you You dont care what I amount to",'3:18'],
+                ["cold, cold beer don't you ever worry I am right here I could never live without you I wouldn't even want to",'3:39']
 
             );
 
-			 function Mp3List(){
+            var nextlyrics=0;
 
-                var mp3PlayList = [];
-                var c =0;
-                $.each(tracks, function(i) {
-                    if(tracks[i][0] == 2){
-                        mp3PlayList.push('<li><a href="'+tracks[i][3]+'">'+tracks[i][1]+'</a></li>');
-                    }
-                    c++;
-                });
-                $('#Mp3PlayList').html(mp3PlayList.join(''));
-            }
-
-            Mp3List();
-			getMp3Source();
-			
-			function getMp3Source(){
-			    current = 0;
-			    audio = $('audio');
-			    mp3playlist = $('#Mp3PlayList');
-			    mp3tracks = mp3playlist.find('li a');
-			    len = mp3tracks.length - 1;
-			    audio[0].volume = .90;
-			    mp3playlist.find('a').click(function(e){
-			        e.preventDefault();
-			        link = $(this);
-			        current = link.parent().index();
-			        PlayMp3(link, audio[0]);
-			    });
-			    audio[0].addEventListener('ended',function(e){
-			        current++;
-			        if(current == len){
-			            current = 0;
-			            link = mp3playlist.find('a')[0];
-			        }else{
-			            link = mp3playlist.find('a')[current];    
-			        }
-			        PlayMp3($(link),audio[0]);
-			    });
-			}
-			function PlayMp3(link, player){
-			        player.src = link.attr('href');
-			        par = link.parent();
-			        par.addClass('active').siblings().removeClass('active');
-			        audio[0].load();
-			        audio[0].play();
-			        PauseVideo();
-			}
-
-          
-			var nextlyrics=0;
-			
             function VideoTime(){
            
-            	$('.VideoTime').each(function(){
-            		videotime = $(this).text();
+                $('.VideoTime').each(function(){
+                    videotime = $(this).text();
 
-        			if(videotime >= Lyrics[nextlyrics][1]){
-            			highlightnext = 0;
-            			nextlyrics++;
-            			NextLyrics(nextlyrics);
-        			}	
-            	});
+                    if(videotime >= Lyrics[nextlyrics][1]){
+                        highlightnext = 0;
+                        nextlyrics++;
+                        NextLyrics(nextlyrics);
+                    }   
+                });
             }
 
-			function NextLyrics(nextlyrics){
-				
-				var text ="";
-				var lyrics = Lyrics[nextlyrics][0].split("");
-   				 
-     			 for(var i=0;i<lyrics.length;i++) {
-          			text += "<span id='p"+i+"' style='color:#000'>" + lyrics[i] + "</span>";
-     			}
-    			$('.lyrics').html(text);
-    			lyricshighlights();
-			}
+            function NextLyrics(nextlyrics){
+                
+                var text ="";
+                var lyrics = Lyrics[nextlyrics][0].split("");
+                 
+                 for(var i=0;i<lyrics.length;i++) {
+                    text += "<span id='p"+i+"' style='color:#000'>" + lyrics[i] + "</span>";
+                }
+                $('.lyrics').html(text);
+                lyricshighlights();
+            }
 
-			var highlightnext= 0;
+            var highlightnext= 0;
 
-			function lyricshighlights() {
-    			$('#p'+highlightnext).css("background-color", "green");
-   				 highlightnext++;
-    			window.setTimeout(lyricshighlights, 200);
-			}
+            function lyricshighlights() {
+                $('#p'+highlightnext).css("background-color", "green");
+                 highlightnext++;
+                window.setTimeout(lyricshighlights, 200);
+            }
 
 
             var getPlaylist = function() {
                 var res = [];
                 for(var i = 0; i < tracks.length; i+=1) {
-                	if(tracks[i][0] == 1){
-                		res.push(tracks[i][3].substr(tracks[i][3].indexOf("=") + 1));
-                	}
+                    if(tracks[i][0] == 1){
+                        res.push(tracks[i][3].substr(tracks[i][3].indexOf("=") + 1));
+                    } else {
+                        res.push(tracks[i][3]);
+                    }
                 }
                 return res;
             };
@@ -249,6 +198,7 @@
                 var playlist = [];
                 var classfield;
                 var clickstatus;
+                var c =0;
 
                 $.each(tracks, function(i) {
 
@@ -260,7 +210,7 @@
                     } else if($.inArray(getPlaylist()[i], videoSelected) !== -1) {
 
                         classfield ='class="activeHighlight"';
-                        clickstatus ='ondblclick="clickPlaylist('+ i +'); return false;"';
+                        clickstatus ='ondblclick="clickPlaylist('+i+'); return false;"';
 
                     } else {
 
@@ -270,13 +220,23 @@
 
                     if(tracks[i][0] == 1){
 
-                    	  playlist.push('<li '+classfield+'> <a href="#" '+ clickstatus +'> <div class="playlist-details"><div class="video-details"><span class="video-name">' +tracks[i][1]+ '<span class="video-time">'+tracks[i][2]+'</span></div><div class="video-img"><img src="http://img.youtube.com/vi/'+ tracks[i][3].substr(tracks[i][3].indexOf("=") + 1) +'/default.jpg" width="72"></div></div></a></li>');
-                    } 
+                          playlist.push('<li '+classfield+'> <a href="#" '+ clickstatus +'> <div class="playlist-details"> <div class="video-details"> <span class="video-name">' +tracks[i][1]+ '<span class="video-time"> '+tracks[i][2]+' </span> </div> <div class="video-img"> <img src="http://img.youtube.com/vi/'+ tracks[i][3].substr(tracks[i][3].indexOf("=") + 1) +'/default.jpg" width="72"> </div> </div> </a> </li>');
+                    } else {
 
+                          playlist.push('<li '+classfield+'> <a href="#" '+ clickstatus +' id="play"> <div class="playlist-details"> <div class="video-details"><span class="video-name">' +tracks[i][1]+ '<span class="video-time">'+tracks[i][2]+'</span> </div> <audio id="myAudio'+c+'" preload="auto"> <source src="'+tracks[i][3]+'"  type="audio/mp3"/></audio> </div> </a> </li>');
+                    }
+                     
+                    c++;
                 }); 
 
                 $('.list').html( playlist.join(''));
+              
             }
+
+            $('#play').click( function() {
+                 $('#player').get(0).play();
+            });
+           
 
 
             var params = { allowScriptAccess: "always"};
@@ -289,18 +249,22 @@
             var PlaylistIdentifier = {};
 
             function onYouTubePlayerReady(id, iter) {
-                	
+                    
                 if(iter == undefined){
                     iter = 0;
                     getPlaylistDetails(getPlaylist()[iter], 'videoPlay', '0');
                 }
                
-               	removeHightlights();
+                removeHightlights();
                 PlaylistIdentifier['Number'] = iter;
                 setInterVal();
-                player=$("#tubePlayer").get(0);
-                player.loadVideoById({'videoId': getPlaylist()[iter], 'startSeconds': 0,/* 'endSeconds': 0,*/ 'suggestedQuality': 'large'});
-                player.addEventListener("onStateChange", "onytplayerStateChange");
+
+                if(tracks[iter][0] == 1){
+                    player=$("#tubePlayer").get(0);
+                    player.loadVideoById({'videoId': getPlaylist()[iter], 'startSeconds': 0,/* 'endSeconds': 0,*/ 'suggestedQuality': 'large'});
+                    player.addEventListener("onStateChange", "onytplayerStateChange");
+                }
+               
             }
 
 
@@ -372,9 +336,17 @@
 
 
             function clickPlaylist(videoID){
-                onYouTubePlayerReady('ytplayer', videoID);
-                getCurrentTime('Reset');
-                getPlaylistDetails(getPlaylist()[videoID], 'videoPlay');
+                if(tracks[videoID][0] == 2){ 
+                    var myAudio = document.getElementById("myAudio"+videoID+"");
+                    myAudio.play();
+
+                } else {
+                    onYouTubePlayerReady('ytplayer', videoID);
+                    getCurrentTime('Reset');
+                    getPlaylistDetails(getPlaylist()[videoID], 'videoPlay');
+                    
+                }
+                
             }
 
 
@@ -382,19 +354,19 @@
             var videoSelected = [];
             function highLights(videoID){
            
-             	if($.inArray(getPlaylist()[videoID], videoSelected) !== -1){
-              		alert('already saved');
-              	} else {
-              		videoSelected.push(getPlaylist()[videoID]);
-              		getPlaylistDetails(getPlaylist()[videoID], 'videoHighLights', getPlaylist()[PlaylistIdentifier['Number']]);
-              	}
+                if($.inArray(getPlaylist()[videoID], videoSelected) !== -1){
+                    alert('already saved');
+                } else {
+                    videoSelected.push(getPlaylist()[videoID]);
+                    getPlaylistDetails(getPlaylist()[videoID], 'videoHighLights', getPlaylist()[PlaylistIdentifier['Number']]);
+                }
             }
 
 
             function removeHightlights(){
-            	if($.inArray(getPlaylist()[PlaylistIdentifier['Number']], videoSelected) !== -1){
-            		videoSelected.splice($.inArray(getPlaylist()[PlaylistIdentifier['Number']], videoSelected),1);
-            	} 
+                if($.inArray(getPlaylist()[PlaylistIdentifier['Number']], videoSelected) !== -1){
+                    videoSelected.splice($.inArray(getPlaylist()[PlaylistIdentifier['Number']], videoSelected),1);
+                } 
             }
 
 
@@ -452,19 +424,19 @@
                     $('.VideoTime').text(currentvideoTime);
 
                     if(currentvideoTime == getVideoTime()[PlaylistIdentifier['Number']]){
-                    	var PlaylistNumber = tracks.length - 1;
+                        var PlaylistNumber = tracks.length - 1;
 
-                    	if(PlaylistIdentifier['Number'] < PlaylistNumber){
-                    		nextNumber = PlaylistIdentifier['Number'] + 1;
-	                        onYouTubePlayerReady('ytplayer', nextNumber);
-	                        getPlaylistDetails(getPlaylist()[nextNumber], 'videoPlay');
-	                        minutes = 0;
-	                        secInterval =0;
-	                        Seconds =0;
+                        if(PlaylistIdentifier['Number'] < PlaylistNumber){
+                            nextNumber = PlaylistIdentifier['Number'] + 1;
+                            onYouTubePlayerReady('ytplayer', nextNumber);
+                            getPlaylistDetails(getPlaylist()[nextNumber], 'videoPlay');
+                            minutes = 0;
+                            secInterval =0;
+                            Seconds =0;
 
-                    	} else {
-                    		clearInterval(myTimer);
-                    	}
+                        } else {
+                            clearInterval(myTimer);
+                        }
                     }
                 });
             }
@@ -472,13 +444,11 @@
             
         
             function setInterVal(){
-            	var myTimer 	= setInterval(getCurrentTime,  1000);
-            	var videoLyrics = setInterval(VideoTime,  1000);
-
-           
-
+                var myTimer     = setInterval(getCurrentTime,  1000);
+                var videoLyrics = setInterval(VideoTime,  1000);
+ 
             }
-
+            
 
         </script>
 </html>
