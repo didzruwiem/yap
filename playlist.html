@@ -7,61 +7,19 @@
         <script src="//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
         <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
         <style>
-            .container{
-                width: 825px;
-            }
-            .header{
-                height: 50px;
-            }
-            .nav-btns{
-                width: 425px;
-                padding: 12px 0px;
-                position: absolute;
-            }
-            .VideoTime{
-                padding: 15px 10px;
-                margin-left: 425px;
-                font-size: 16px;
-                border: solid 1px #000;
-            }
-            #tubePlayer{
-                position: absolute;
-            }
-            .playlist{
-                margin-left: 425px;
-                height: 356px;
-                font-size: 16px;
-                margin-bottom: 0px; 
-                overflow:auto;
-                background-color: #333;
-            }
-            .list{
-                list-style-type:none;
-                padding: 0px;
-            }
-            .list li a{
-                text-decoration: none;
-                color: #fff;
-            }
-            .list li:hover{
-                 background-color: #3a3a3a;
-            }
-            .activePlayed{
-                background-color: #d9534f;
-                pointer-events: none;
-                cursor: default;
-            }
-            .activeHighlight{
-                background-color: #4cae4c;
-            }
-            .playlist-details{
-                padding:10px 15px;
-            }
-            .video-time{
-                float: right;
-            }
-
-            
+            .container          { width: 825px; }
+            .header             { height: 50px; }
+            .nav-btns           { width: 425px; padding: 12px 0px; position: absolute; }
+            .VideoTime          { padding: 15px 10px; margin-left: 425px; font-size: 16px; border: solid 1px #000; }
+            #tubePlayer         { position: absolute; }
+            .playlist           { margin-left: 425px;height: 356px; font-size: 16px; margin-bottom: 0px;overflow:auto; background-color: #333; }
+            .list               { list-style-type:none; padding: 0px; }
+            .list li a          { text-decoration: none; color: #fff;}
+            .list li:hover      { background-color: #3a3a3a; }
+            .activePlayed       { background-color: #d9534f; pointer-events: none; cursor: default; }
+            .activeHighlight    { background-color: #4cae4c; }
+            .playlist-details   { padding:10px 15px; }
+            .video-time         { float: right; }
         </style>
     </head>
     <body>
@@ -87,7 +45,6 @@
             </div>
         </div>
         <div class="lyrics"></div>
-
     </body>
     <script type="text/javascript">
 
@@ -99,7 +56,11 @@
                 [1, 'Sound Choir Romania - Shchedryk','1:54','https://www.youtube.com/watch?v=cP5iHPOJKlk'],
                 [1, 'Pentatonix - Carol of the Bells','4:10','https://www.youtube.com/watch?v=WSUFzC6_fp8'],
                 [2, 'Jesse Stewart - Cold Beer', '4:16', 'http://www.jessedirtybeer.com/Cold_Beer_-_Deep_in_Cider.mp3'],
-                [2, 'Zac Brown Band - Toes', '4:18', 'http://onlinekaraoke.tv/assets/songs/55000-55999/55258-toes-zac-brown-band--1411581094.mp3']
+                [2, 'Zac Brown Band - Toes', '4:18', 'http://onlinekaraoke.tv/assets/songs/55000-55999/55258-toes-zac-brown-band--1411581094.mp3'],
+                [2, 'Zac Brown Band - Colder Weather', '4:34', 'http://onlinekaraoke.tv/assets/songs/52000-52999/52497-colder-weather-zac-brown-band--1411580367.mp3'],
+                [2, 'Zac Brown Band - Sweet Annie', '4:39', 'http://mp3for.me/assets/songs/72000-72999/72360-sweet-annie-zac-brown-band.mp3']
+
+                
             );
 
             var Lyrics = new Array(
@@ -133,12 +94,10 @@
             );
 
             var nextlyrics=0;
-
             function VideoTime(){
            
                 $('.VideoTime').each(function(){
                     videotime = $(this).text();
-
                     if(videotime >= Lyrics[nextlyrics][1]){
                         highlightnext = 0;
                         nextlyrics++;
@@ -148,7 +107,6 @@
             }
 
             function NextLyrics(nextlyrics){
-                
                 var text ="";
                 var lyrics = Lyrics[nextlyrics][0].split("");
                  
@@ -160,13 +118,11 @@
             }
 
             var highlightnext= 0;
-
             function lyricshighlights() {
                 $('#p'+highlightnext).css("background-color", "green");
                  highlightnext++;
                 window.setTimeout(lyricshighlights, 200);
             }
-
 
             var getPlaylist = function() {
                 var res = [];
@@ -183,15 +139,11 @@
 
             var getVideoTime = function(){
                 var videotime = [];
-
                 for(var x =0; x < tracks.length; x+=1){
                     videotime.push(tracks[x][2]);
                 }
-
                 return videotime;
             };
-
-
 
             function getPlaylistDetails(videoID, videoStatus, currentPlay){
 
@@ -199,31 +151,22 @@
                 var classfield;
                 var clickstatus;
                 var c =0;
-
                 $.each(tracks, function(i) {
 
-                    if((getPlaylist()[i] == videoID && videoStatus =="videoPlay") || (getPlaylist()[i] == currentPlay)){
-
+                    if((getPlaylist()[i] == videoID && videoStatus == 'videoPlay') || (getPlaylist()[i] == currentPlay)){
                         classfield ='class="activePlayed"';
                         clickstatus ='';
-
                     } else if($.inArray(getPlaylist()[i], videoSelected) !== -1) {
-
                         classfield ='class="activeHighlight"';
                         clickstatus ='ondblclick="clickPlaylist('+i+'); return false;"';
-
                     } else {
-
                         classfield="";
                         clickstatus='onclick="highLights('+i+')"';
                     }
-
                     if(tracks[i][0] == 1){
-
-                          playlist.push('<li '+classfield+'> <a href="#" '+ clickstatus +'> <div class="playlist-details"> <div class="video-details"> <span class="video-name">' +tracks[i][1]+ '<span class="video-time"> '+tracks[i][2]+' </span> </div> <div class="video-img"> <img src="http://img.youtube.com/vi/'+ tracks[i][3].substr(tracks[i][3].indexOf("=") + 1) +'/default.jpg" width="72"> </div> </div> </a> </li>');
+                          playlist.push('<li '+classfield+' id="youtubeapp-song-'+c+'"> <a href="#" '+ clickstatus +'> <div class="playlist-details"> <div class="video-details"> <span class="video-name">' +tracks[i][1]+ '<span class="video-time"> '+tracks[i][2]+' </span> </div> <div class="video-img"> <img src="http://img.youtube.com/vi/'+ tracks[i][3].substr(tracks[i][3].indexOf("=") + 1) +'/default.jpg" width="72"> </div> </div> </a> </li>');
                     } else {
-
-                          playlist.push('<li '+classfield+'> <a href="#" '+ clickstatus +' id="play"> <div class="playlist-details"> <div class="video-details"><span class="video-name">' +tracks[i][1]+ '<span class="video-time">'+tracks[i][2]+'</span> </div> <audio id="myAudio'+c+'" preload="auto"> <source src="'+tracks[i][3]+'"  type="audio/mp3"/></audio> </div> </a> </li>');
+                          playlist.push('<li '+classfield+' id="mp3-song-'+c+'"> <a href="#" '+ clickstatus +' id="play"> <div class="playlist-details"> <div class="video-details"><span class="video-name">' +tracks[i][1]+ '<span class="video-time">'+tracks[i][2]+'</span> </div> <audio id="myAudio'+c+'" preload="auto"> <source src="'+tracks[i][3]+'"  type="audio/mp3"/></audio> </div> </a> </li>');
                     }
                      
                     c++;
@@ -233,16 +176,9 @@
               
             }
 
-            $('#play').click( function() {
-                 $('#player').get(0).play();
-            });
-           
-
-
             var params = { allowScriptAccess: "always"};
             var atts = { id: "tubePlayer"};
             swfobject.embedSWF("http://www.youtube.com/apiplayer?enablejsapi=1&playerapiid=ytplayer&version=3&controls=1&showinfo=0", "tubePlayer", "425", "356", "8", null, null, params, atts);
-
 
 
             var player;
@@ -254,20 +190,25 @@
                     iter = 0;
                     getPlaylistDetails(getPlaylist()[iter], 'videoPlay', '0');
                 }
-               
+
                 removeHightlights();
                 PlaylistIdentifier['Number'] = iter;
                 setInterVal();
+                player=$("#tubePlayer").get(0);
 
-                if(tracks[iter][0] == 1){
-                    player=$("#tubePlayer").get(0);
+                if(tracks[iter][0] == 1){ 
                     player.loadVideoById({'videoId': getPlaylist()[iter], 'startSeconds': 0,/* 'endSeconds': 0,*/ 'suggestedQuality': 'large'});
                     player.addEventListener("onStateChange", "onytplayerStateChange");
+
+                } else {
+
+                    player.pauseVideo();
+                    getPlaylistDetails(getPlaylist()[iter], 'videoPlay');
+                    var myAudio = document.getElementById("myAudio"+iter+"");
+                    myAudio.play();
                 }
                
             }
-
-
 
             //function onytplayerStateChange(newState) {
                //if(newState === 0) {
@@ -279,8 +220,6 @@
                //     console.log("Current time is: " + player.getCurrentTime());
                //}
             //}
-
-
           
             function PauseVideo(){
 
@@ -297,7 +236,6 @@
                     }
                 });
             }
-
 
 
             function nextplay(){
@@ -328,7 +266,6 @@
             }
 
 
-
             function restartplay(){
                 onYouTubePlayerReady('ytplayer', PlaylistIdentifier['Number']);
                 getCurrentTime('Reset');
@@ -336,29 +273,32 @@
 
 
             function clickPlaylist(videoID){
-                if(tracks[videoID][0] == 2){ 
-                    var myAudio = document.getElementById("myAudio"+videoID+"");
-                    myAudio.play();
-
-                } else {
-                    onYouTubePlayerReady('ytplayer', videoID);
-                    getCurrentTime('Reset');
-                    getPlaylistDetails(getPlaylist()[videoID], 'videoPlay');
-                    
+                onYouTubePlayerReady('ytplayer', videoID);
+                 getCurrentTime('Reset');
+                if(tracks[videoID][0] == 1){
+                    getPlaylistDetails(getPlaylist()[videoID], 'videoPlay'); 
                 }
-                
             }
 
-
-            
             var videoSelected = [];
             function highLights(videoID){
-           
+
                 if($.inArray(getPlaylist()[videoID], videoSelected) !== -1){
                     alert('already saved');
                 } else {
+
                     videoSelected.push(getPlaylist()[videoID]);
-                    getPlaylistDetails(getPlaylist()[videoID], 'videoHighLights', getPlaylist()[PlaylistIdentifier['Number']]);
+                     if(tracks[PlaylistIdentifier['Number']][0] == 2){
+                        if(tracks[videoID][0] == 2){
+                            $('#mp3-song-'+videoID+'').html('<li class="activeHighlight" id="mp3'+videoID+'"> <a href="#" ondblclick="clickPlaylist('+videoID+'); return false;" id="play"> <div class="playlist-details"> <div class="video-details"><span class="video-name">' +tracks[videoID][1]+ '<span class="video-time">'+tracks[videoID][2]+'</span> </div> <audio id="myAudio'+videoID+'" preload="auto"> <source src="'+tracks[videoID][3]+'"  type="audio/mp3"/></audio> </div> </a> </li>');
+                        } else {
+                            $('#youtubeapp-song-'+videoID+'').html('<li class="activeHighlight" id="youtubeapp-song-'+videoID+'"> <a href="#" ondblclick="clickPlaylist('+videoID+'); return false;"> <div class="playlist-details"> <div class="video-details"> <span class="video-name">' +tracks[videoID][1]+ '<span class="video-time"> '+tracks[videoID][2]+' </span> </div> <div class="video-img"> <img src="http://img.youtube.com/vi/'+ tracks[videoID][3].substr(tracks[videoID][3].indexOf("=") + 1) +'/default.jpg" width="72"> </div> </div> </a> </li>');
+                        }
+                        
+                     } else {
+                        getPlaylistDetails(getPlaylist()[videoID], 'videoHighLights', getPlaylist()[PlaylistIdentifier['Number']]);
+                     }
+            
                 }
             }
 
@@ -369,15 +309,17 @@
                 } 
             }
 
-
-
             var secInterval = 0;
             var minutes = 0;
             var currentvideoTime;
 
             function getCurrentTime(status){
-                
-                $('.CurrentTime').text(player.getCurrentTime());
+                if(tracks[PlaylistIdentifier['Number']][0] == 2){
+                    var myAudio = document.getElementById("myAudio"+PlaylistIdentifier['Number']+"");
+                    $('.CurrentTime').text(myAudio.currentTime);
+                } else {
+                    $('.CurrentTime').text(player.getCurrentTime());
+                }
 
                 $('.CurrentTime').each(function(){
                         
@@ -391,7 +333,6 @@
                         getSeconds =0;
                      }
 
- 
                     if(secInterval == 0){
                         secInterval = 60;
                     }
@@ -414,7 +355,6 @@
                         Seconds = '0'+Seconds;
                     }
 
-
                     if(minutes == 1 && Seconds == 22){
                         alert('Next Video: ' + tracks[PlaylistIdentifier['Number']+1][1] + ' - ' + tracks[PlaylistIdentifier['Number']+1][2]);
                     } 
@@ -423,13 +363,16 @@
 
                     $('.VideoTime').text(currentvideoTime);
 
-                    if(currentvideoTime == getVideoTime()[PlaylistIdentifier['Number']]){
+                    if(currentvideoTime >= tracks[PlaylistIdentifier['Number']][2]){
                         var PlaylistNumber = tracks.length - 1;
-
                         if(PlaylistIdentifier['Number'] < PlaylistNumber){
                             nextNumber = PlaylistIdentifier['Number'] + 1;
                             onYouTubePlayerReady('ytplayer', nextNumber);
-                            getPlaylistDetails(getPlaylist()[nextNumber], 'videoPlay');
+
+                            if(tracks[nextNumber][0] == 1){
+                              getPlaylistDetails(getPlaylist()[nextNumber], 'videoPlay'); 
+                            }
+
                             minutes = 0;
                             secInterval =0;
                             Seconds =0;
@@ -442,13 +385,10 @@
             }
 
             
-        
             function setInterVal(){
                 var myTimer     = setInterval(getCurrentTime,  1000);
                 var videoLyrics = setInterval(VideoTime,  1000);
  
             }
-            
-
         </script>
 </html>
