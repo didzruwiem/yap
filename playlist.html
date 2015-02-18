@@ -26,15 +26,14 @@
         <div class="container">
             <div class="header">
                 <div class="nav-btns">
-                    <button onclick="player.pauseVideo(); PauseVideo();">Pause</button>
-                    <button onclick="player.playVideo()">Start</button>
-                    <button onclick="restartplay()">Restart</button>
-                    <button onclick="previousplay()">Previous</button>
-                    <button onclick="nextplay()">Next</button>
+                    <button onclick="Pause();">Pause</button>
+                    <button onclick="Play()">Start</button>
+                    <button onclick="Restart()">Restart</button>
+                    <button onclick="Previous()">Previous</button>
+                    <button onclick="Next()">Next</button>
                 </div>
                 <div class="CurrentTime" style="display:none"></div>
                 <div class="VideoTime"></div>
-
             </div>
             <div id="tubePlayer">
                 You may or may not need Flash Player something or other and JavaScript enabled to blow up the enterprise.
@@ -57,10 +56,9 @@
                 [1, 'Pentatonix - Carol of the Bells','4:10','https://www.youtube.com/watch?v=WSUFzC6_fp8'],
                 [2, 'Jesse Stewart - Cold Beer', '4:16', 'http://www.jessedirtybeer.com/Cold_Beer_-_Deep_in_Cider.mp3'],
                 [2, 'Zac Brown Band - Toes', '4:18', 'http://onlinekaraoke.tv/assets/songs/55000-55999/55258-toes-zac-brown-band--1411581094.mp3'],
-                [2, 'Zac Brown Band - Colder Weather', '4:34', 'http://onlinekaraoke.tv/assets/songs/52000-52999/52497-colder-weather-zac-brown-band--1411580367.mp3'],
+                [2, 'Zac Brown Band - Free', '3:48', 'http://a.tumblr.com/tumblr_lpm56qfUjB1qzl28wo1.mp3'],
                 [2, 'Zac Brown Band - Sweet Annie', '4:39', 'http://mp3for.me/assets/songs/72000-72999/72360-sweet-annie-zac-brown-band.mp3']
 
-                
             );
 
             var Lyrics = new Array(
@@ -190,7 +188,6 @@
                     iter = 0;
                     getPlaylistDetails(getPlaylist()[iter], 'videoPlay', '0');
                 }
-
                 removeHightlights();
                 PlaylistIdentifier['Number'] = iter;
                 setInterVal();
@@ -199,32 +196,32 @@
                 if(tracks[iter][0] == 1){ 
                     player.loadVideoById({'videoId': getPlaylist()[iter], 'startSeconds': 0,/* 'endSeconds': 0,*/ 'suggestedQuality': 'large'});
                     player.addEventListener("onStateChange", "onytplayerStateChange");
-
                 } else {
-
                     player.pauseVideo();
                     getPlaylistDetails(getPlaylist()[iter], 'videoPlay');
                     var myAudio = document.getElementById("myAudio"+iter+"");
                     myAudio.play();
                 }
-               
             }
 
-            //function onytplayerStateChange(newState) {
-               //if(newState === 0) {
-                 //  iter+=1;
-                //   player.loadVideoById({'videoId': getPlaylist()[iter], 'startSeconds': 0, /*'endSeconds': 10,*/ 'suggestedQuality': 'large'});
-                //    console.log(player.getCurrentTime());
-               // }
-               // if(newState === 2) {
-               //     console.log("Current time is: " + player.getCurrentTime());
-               //}
-            //}
-          
-            function PauseVideo(){
 
+            function Play(){
+                if(tracks[PlaylistIdentifier['Number']][0] == 1){
+                    player.playVideo()
+                } else {
+                    var myAudio = document.getElementById("myAudio"+PlaylistIdentifier['Number']+"");
+                    myAudio.play();
+                }
+            }
+          
+            function Pause(){
                  $('.CurrentTime').each(function(){
-                        
+                    if(tracks[PlaylistIdentifier['Number']][0] == 1){
+                        player.pauseVideo();  
+                    } else {
+                         var myAudio = document.getElementById("myAudio"+PlaylistIdentifier['Number']+"");
+                         myAudio.pause();
+                    } 
                    var LenghtTime = $(this).text().indexOf(".");
                    var CurrentVideoTime = $(this).text().substring(0, LenghtTime);
                    var PlaylistNumber = tracks.length - 1;
@@ -238,27 +235,30 @@
             }
 
 
-            function nextplay(){
-
+            function Next(){
                 var PlaylistNumber = tracks.length - 1;
-
                 if(PlaylistIdentifier['Number'] < PlaylistNumber){
                     nextNumber = PlaylistIdentifier['Number'] + 1;
                     onYouTubePlayerReady('ytplayer', nextNumber);
+
+                    if(tracks[nextNumber][0] == 1){
+                        getPlaylistDetails(getPlaylist()[nextNumber], 'videoPlay');
+                     } 
                     getCurrentTime('Reset');
-                    getPlaylistDetails(getPlaylist()[nextNumber], 'videoPlay');
+                   
                 } else {    
                     alert('There are no video for next');
                 }
             }
 
 
-            function previousplay(){
-
+            function Previous(){
                 if(PlaylistIdentifier['Number'] != 0){
                     previousNumber = PlaylistIdentifier['Number'] - 1;
                     onYouTubePlayerReady('ytplayer', previousNumber);
-                    getPlaylistDetails(getPlaylist()[previousNumber], 'videoPlay');
+                    if(tracks[previousNumber][0] == 1){
+                        getPlaylistDetails(getPlaylist()[previousNumber], 'videoPlay');
+                    }
                     getCurrentTime('Reset');
                 } else {
                     alert('There are no video for previous');
@@ -266,8 +266,14 @@
             }
 
 
-            function restartplay(){
-                onYouTubePlayerReady('ytplayer', PlaylistIdentifier['Number']);
+            function Restart(){
+                if(tracks[PlaylistIdentifier['Number']][0] == 1){
+                    onYouTubePlayerReady('ytplayer', PlaylistIdentifier['Number']);
+                } else {
+                    var myAudio = document.getElementById("myAudio"+PlaylistIdentifier['Number']+"");
+                    myAudio.load();
+                    myAudio.play();
+                }
                 getCurrentTime('Reset');
             }
 
