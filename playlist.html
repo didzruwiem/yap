@@ -3,14 +3,18 @@
     <head>
         <meta charset="UTF-8">
         <title>YouTubeApp</title>
+        <!--include style-->
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
         <script src="googleapis.com/ajax/libs/swfobject/2.2/swtobject.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
         <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <!--<script src="js/bootstrap.js"></script>-->
         <style>
+            body                {background: #5a5a5a;}
             .container          { width: 825px; }
             .header             { height: 50px; }
-            .nav-btns           { width: 425px; padding: 12px 0px; position: absolute; }
-            .VideoTime          { padding: 15px 10px; margin-left: 425px; font-size: 16px; border: solid 1px #000; }
+            .nav-btns           { width: 425px; padding: 7px 39px; position: absolute; }
+            .VideoTime          { padding: 15px 10px; margin-left: 425px; font-size: 16px; /*border: solid 1px #000;*/ }
             #tubePlayer         { position: absolute; }
             .playlist           { margin-left: 425px;height: 356px; font-size: 16px; margin-bottom: 0px;overflow:auto; background-color: #333; }
             .list               { list-style-type:none; padding: 0px; }
@@ -20,17 +24,19 @@
             .activeHighlight    { background-color: #4cae4c; }
             .playlist-details   { padding:10px 15px; }
             .video-time         { float: right; }
+            .lyrics             { padding: 10px 60px; }
         </style>
     </head>
     <body>
         <div class="container">
             <div class="header">
-                <div class="nav-btns">
-                    <button onclick="Pause();">Pause</button>
-                    <button onclick="Play()">Start</button>
-                    <button onclick="Restart()">Restart</button>
-                    <button onclick="Previous()">Previous</button>
-                    <button onclick="Next()">Next</button>
+                <div class="navbar navbar-inverse nav-btns">
+
+                    <button type="button" class="btn btn-success" onclick="Pause();">Pause</button>
+                    <button onclick="Play()" class="btn btn-success">Start</button>
+                    <button onclick="Restart()" class="btn btn-success">Restart</button>
+                    <button onclick="Previous()" class="btn btn-primary">Previous</button>
+                    <button onclick="Next()" class="btn btn-primary">Next</button>
                 </div>
                 <div class="CurrentTime" style="display:none"></div>
                 <div class="VideoTime"></div>
@@ -42,8 +48,12 @@
                 <ul class="list" id="list">
                 </ul>
             </div>
+
         </div>
-        <div class="lyrics"></div>
+        <div class="panel panel-primary" style="width: 797px;margin: 0 auto;">
+            <div class="lyrics"></div>
+        </div>
+
     </body>
     <script type="text/javascript">
 
@@ -158,7 +168,7 @@
                         classfield ='class="activeHighlight"';
                         clickstatus ='ondblclick="clickPlaylist('+i+'); return false;"';
                     } else {
-                        classfield="";
+                        classfield='';
                         clickstatus='onclick="highLights('+i+')"';
                     }
                     if(tracks[i][0] == 1){
