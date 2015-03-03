@@ -3,18 +3,14 @@
     <head>
         <meta charset="UTF-8">
         <title>YouTubeApp</title>
-        <!--include style-->
-        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
         <script src="googleapis.com/ajax/libs/swfobject/2.2/swtobject.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
         <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-        <!--<script src="js/bootstrap.js"></script>-->
         <style>
-            body                {background: #5a5a5a;}
             .container          { width: 825px; }
             .header             { height: 50px; }
-            .nav-btns           { width: 425px; padding: 7px 39px; position: absolute; }
-            .VideoTime          { padding: 15px 10px; margin-left: 425px; font-size: 16px; /*border: solid 1px #000;*/ }
+            .nav-btns           { width: 425px; padding: 12px 0px; position: absolute; }
+            .VideoTime          { padding: 15px 10px; margin-left: 425px; font-size: 16px; border: solid 1px #000; }
             #tubePlayer         { position: absolute; }
             .playlist           { margin-left: 425px;height: 356px; font-size: 16px; margin-bottom: 0px;overflow:auto; background-color: #333; }
             .list               { list-style-type:none; padding: 0px; }
@@ -24,19 +20,17 @@
             .activeHighlight    { background-color: #4cae4c; }
             .playlist-details   { padding:10px 15px; }
             .video-time         { float: right; }
-            .lyrics             { padding: 10px 60px; }
         </style>
     </head>
     <body>
         <div class="container">
             <div class="header">
-                <div class="navbar navbar-inverse nav-btns">
-
-                    <button type="button" class="btn btn-success" onclick="Pause();">Pause</button>
-                    <button onclick="Play()" class="btn btn-success">Start</button>
-                    <button onclick="Restart()" class="btn btn-success">Restart</button>
-                    <button onclick="Previous()" class="btn btn-primary">Previous</button>
-                    <button onclick="Next()" class="btn btn-primary">Next</button>
+                <div class="nav-btns">
+                    <button onclick="Pause();">Pause</button>
+                    <button onclick="Play()">Start</button>
+                    <button onclick="Restart()">Restart</button>
+                    <button onclick="Previous()">Previous</button>
+                    <button onclick="Next()">Next</button>
                 </div>
                 <div class="CurrentTime" style="display:none"></div>
                 <div class="VideoTime"></div>
@@ -48,27 +42,21 @@
                 <ul class="list" id="list">
                 </ul>
             </div>
-
         </div>
-        <div class="panel panel-primary" style="width: 797px;margin: 0 auto;">
-            <div class="lyrics"></div>
-        </div>
-
+        <div class="lyrics"></div>
     </body>
     <script type="text/javascript">
 
             var tracks = new Array(
-     
                 [1, 'Jesse Stewart - Cold Beer','3:39','https://www.youtube.com/watch?v=ZEvQOPUHGH8'],
                 [1, 'Miley Cyrus - Jolene', '2:59', 'https://www.youtube.com/watch?v=wOwblaKmyVw'],
                 [1, 'DZIDZIO - Старі фотографії','3:33','https://www.youtube.com/watch?v=_Gx0ZyQSSpg'],
                 [1, 'Sound Choir Romania - Shchedryk','1:54','https://www.youtube.com/watch?v=cP5iHPOJKlk'],
                 [1, 'Pentatonix - Carol of the Bells','4:10','https://www.youtube.com/watch?v=WSUFzC6_fp8'],
                 [2, 'Jesse Stewart - Cold Beer', '4:16', 'http://www.jessedirtybeer.com/Cold_Beer_-_Deep_in_Cider.mp3'],
-                [2, 'Zac Brown Band - Toes', '4:18', 'http://onlinekaraoke.tv/assets/songs/55000-55999/55258-toes-zac-brown-band--1411581094.mp3'],
+                [2, 'Miley Cyrus - Jolene', '3:00', 'http://www.mp3zone.sk/files/4648057/miley-cyrus-jolene.mp3'],
                 [2, 'Zac Brown Band - Free', '3:48', 'http://a.tumblr.com/tumblr_lpm56qfUjB1qzl28wo1.mp3'],
                 [2, 'Zac Brown Band - Sweet Annie', '4:39', 'http://mp3for.me/assets/songs/72000-72999/72360-sweet-annie-zac-brown-band.mp3']
-
             );
 
             var Lyrics = new Array(
@@ -103,7 +91,6 @@
 
             var nextlyrics=0;
             function VideoTime(){
-           
                 $('.VideoTime').each(function(){
                     videotime = $(this).text();
                     if(videotime >= Lyrics[nextlyrics][1]){
@@ -168,7 +155,7 @@
                         classfield ='class="activeHighlight"';
                         clickstatus ='ondblclick="clickPlaylist('+i+'); return false;"';
                     } else {
-                        classfield='';
+                        classfield="";
                         clickstatus='onclick="highLights('+i+')"';
                     }
                     if(tracks[i][0] == 1){
@@ -187,7 +174,6 @@
             var params = { allowScriptAccess: "always"};
             var atts = { id: "tubePlayer"};
             swfobject.embedSWF("http://www.youtube.com/apiplayer?enablejsapi=1&playerapiid=ytplayer&version=3&controls=1&showinfo=0", "tubePlayer", "425", "356", "8", null, null, params, atts);
-
 
             var player;
             var PlaylistIdentifier = {};
@@ -232,13 +218,14 @@
                          var myAudio = document.getElementById("myAudio"+PlaylistIdentifier['Number']+"");
                          myAudio.pause();
                     } 
+
                    var LenghtTime = $(this).text().indexOf(".");
                    var CurrentVideoTime = $(this).text().substring(0, LenghtTime);
                    var PlaylistNumber = tracks.length - 1;
 
                    if(CurrentVideoTime >= 81){
                         if(PlaylistIdentifier['Number'] < PlaylistNumber){
-                            alert('Next Video: ' + tracks[PlaylistIdentifier['Number']+1][1] + ' - ' + tracks[PlaylistIdentifier['Number']+1][2]);
+                            alert('Next Video: ' + tracks[nextPlay()][1] + ' - ' + tracks[nextPlay()][2]);
                         } 
                     }
                 });
@@ -246,16 +233,14 @@
 
 
             function Next(){
-                var PlaylistNumber = tracks.length - 1;
-                if(PlaylistIdentifier['Number'] < PlaylistNumber){
-                    nextNumber = PlaylistIdentifier['Number'] + 1;
+                var PlaylistNumber = tracks.length;
+                nextNumber = nextPlay();
+                if(nextNumber <= PlaylistNumber){
                     onYouTubePlayerReady('ytplayer', nextNumber);
-
                     if(tracks[nextNumber][0] == 1){
                         getPlaylistDetails(getPlaylist()[nextNumber], 'videoPlay');
                      } 
                     getCurrentTime('Reset');
-                   
                 } else {    
                     alert('There are no video for next');
                 }
@@ -297,6 +282,7 @@
             }
 
             var videoSelected = [];
+            var videoNumSelected =[];
             function highLights(videoID){
 
                 if($.inArray(getPlaylist()[videoID], videoSelected) !== -1){
@@ -304,6 +290,7 @@
                 } else {
 
                     videoSelected.push(getPlaylist()[videoID]);
+                    videoNumSelected.push(videoID);
                      if(tracks[PlaylistIdentifier['Number']][0] == 2){
                         if(tracks[videoID][0] == 2){
                             $('#mp3-song-'+videoID+'').html('<li class="activeHighlight" id="mp3'+videoID+'"> <a href="#" ondblclick="clickPlaylist('+videoID+'); return false;" id="play"> <div class="playlist-details"> <div class="video-details"><span class="video-name">' +tracks[videoID][1]+ '<span class="video-time">'+tracks[videoID][2]+'</span> </div> <audio id="myAudio'+videoID+'" preload="auto"> <source src="'+tracks[videoID][3]+'"  type="audio/mp3"/></audio> </div> </a> </li>');
@@ -322,8 +309,19 @@
             function removeHightlights(){
                 if($.inArray(getPlaylist()[PlaylistIdentifier['Number']], videoSelected) !== -1){
                     videoSelected.splice($.inArray(getPlaylist()[PlaylistIdentifier['Number']], videoSelected),1);
+                    videoNumSelected.splice($.inArray(PlaylistIdentifier['Number'], videoNumSelected),1);
                 } 
             }
+
+            function nextPlay(){
+                if(videoNumSelected.length > 1){
+                    NextPlay = videoNumSelected[1];
+                } else {
+                     NextPlay = PlaylistIdentifier['Number'] + 1;
+                }
+                return NextPlay;
+            }
+
 
             var secInterval = 0;
             var minutes = 0;
@@ -372,27 +370,27 @@
                     }
 
                     if(minutes == 1 && Seconds == 22){
-                        alert('Next Video: ' + tracks[PlaylistIdentifier['Number']+1][1] + ' - ' + tracks[PlaylistIdentifier['Number']+1][2]);
+                        NextPlay = nextPlay();
+                        alert('Next Play: ' + tracks[NextPlay][1] + ' - ' + tracks[NextPlay][2]);
                     } 
 
                     currentvideoTime =  minutes + ':' + Seconds;
-
                     $('.VideoTime').text(currentvideoTime);
 
                     if(currentvideoTime >= tracks[PlaylistIdentifier['Number']][2]){
                         var PlaylistNumber = tracks.length - 1;
                         if(PlaylistIdentifier['Number'] < PlaylistNumber){
-                            nextNumber = PlaylistIdentifier['Number'] + 1;
-                            onYouTubePlayerReady('ytplayer', nextNumber);
+                            onYouTubePlayerReady('ytplayer', NextPlay);
 
-                            if(tracks[nextNumber][0] == 1){
-                              getPlaylistDetails(getPlaylist()[nextNumber], 'videoPlay'); 
+                            if(tracks[NextPlay][0] == 1){
+                              getPlaylistDetails(getPlaylist()[NextPlay], 'videoPlay'); 
+                            } else {
+                                player.pauseVideo();
                             }
 
                             minutes = 0;
                             secInterval =0;
                             Seconds =0;
-
                         } else {
                             clearInterval(myTimer);
                         }
