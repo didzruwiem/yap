@@ -3,14 +3,18 @@
     <head>
         <meta charset="UTF-8">
         <title>YouTubeApp</title>
+        <!--include style-->
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
         <script src="googleapis.com/ajax/libs/swfobject/2.2/swtobject.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
         <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <!--<script src="js/bootstrap.js"></script>-->
         <style>
+            body                {background: #5a5a5a;}
             .container          { width: 825px; }
             .header             { height: 50px; }
-            .nav-btns           { width: 425px; padding: 12px 0px; position: absolute; }
-            .VideoTime          { padding: 15px 10px; margin-left: 425px; font-size: 16px; border: solid 1px #000; }
+            .nav-btns           { width: 425px; padding: 7px 39px; position: absolute; }
+            .VideoTime          { padding: 15px 10px; margin-left: 425px; font-size: 16px; /*border: solid 1px #000;*/ }
             #tubePlayer         { position: absolute; }
             .playlist           { margin-left: 425px;height: 356px; font-size: 16px; margin-bottom: 0px;overflow:auto; background-color: #333; }
             .list               { list-style-type:none; padding: 0px; }
@@ -20,17 +24,19 @@
             .activeHighlight    { background-color: #4cae4c; }
             .playlist-details   { padding:10px 15px; }
             .video-time         { float: right; }
+            .lyrics             { padding: 10px 60px; }
         </style>
     </head>
     <body>
         <div class="container">
             <div class="header">
-                <div class="nav-btns">
-                    <button onclick="Pause();">Pause</button>
-                    <button onclick="Play()">Start</button>
-                    <button onclick="Restart()">Restart</button>
-                    <button onclick="Previous()">Previous</button>
-                    <button onclick="Next()">Next</button>
+                <div class="navbar navbar-inverse nav-btns">
+
+                    <button type="button" class="btn btn-success" onclick="Pause();">Pause</button>
+                    <button onclick="Play()" class="btn btn-success">Start</button>
+                    <button onclick="Restart()" class="btn btn-success">Restart</button>
+                    <button onclick="Previous()" class="btn btn-primary">Previous</button>
+                    <button onclick="Next()" class="btn btn-primary">Next</button>
                 </div>
                 <div class="CurrentTime" style="display:none"></div>
                 <div class="VideoTime"></div>
@@ -42,23 +48,26 @@
                 <ul class="list" id="list">
                 </ul>
             </div>
+
         </div>
-        <div class="lyrics"></div>
+        <div class="panel panel-primary" style="width: 797px;margin: 0 auto;">
+            <div class="lyrics"></div>
+        </div>
+
     </body>
     <script type="text/javascript">
-
             var tracks = new Array(
+     
                 [1, 'Jesse Stewart - Cold Beer','3:39','https://www.youtube.com/watch?v=ZEvQOPUHGH8'],
                 [1, 'Miley Cyrus - Jolene', '2:59', 'https://www.youtube.com/watch?v=wOwblaKmyVw'],
                 [1, 'DZIDZIO - Старі фотографії','3:33','https://www.youtube.com/watch?v=_Gx0ZyQSSpg'],
                 [1, 'Sound Choir Romania - Shchedryk','1:54','https://www.youtube.com/watch?v=cP5iHPOJKlk'],
                 [1, 'Pentatonix - Carol of the Bells','4:10','https://www.youtube.com/watch?v=WSUFzC6_fp8'],
                 [2, 'Jesse Stewart - Cold Beer', '4:16', 'http://www.jessedirtybeer.com/Cold_Beer_-_Deep_in_Cider.mp3'],
-                [2, 'Miley Cyrus - Jolene', '3:00', 'http://www.mp3zone.sk/files/4648057/miley-cyrus-jolene.mp3'],
+                [2, 'Zac Brown Band - Toes', '4:18', 'http://onlinekaraoke.tv/assets/songs/55000-55999/55258-toes-zac-brown-band--1411581094.mp3'],
                 [2, 'Zac Brown Band - Free', '3:48', 'http://a.tumblr.com/tumblr_lpm56qfUjB1qzl28wo1.mp3'],
                 [2, 'Zac Brown Band - Sweet Annie', '4:39', 'http://mp3for.me/assets/songs/72000-72999/72360-sweet-annie-zac-brown-band.mp3']
             );
-
             var Lyrics = new Array(
                 ['','0:00'],
                 ['Kinda get broken when it comes to emotion makes me start chokin so I sit by the ocean','0:06'],
@@ -86,11 +95,10 @@
                 ["get a road so cold pop two for a whop top twist off pop top tall boy cold shot",'3:05'],
                 ["beer, cold beer don't you ever worry I am right here never live without you You dont care what I amount to",'3:18'],
                 ["cold, cold beer don't you ever worry I am right here I could never live without you I wouldn't even want to",'3:39']
-
             );
-
             var nextlyrics=0;
             function VideoTime(){
+           
                 $('.VideoTime').each(function(){
                     videotime = $(this).text();
                     if(videotime >= Lyrics[nextlyrics][1]){
@@ -100,7 +108,6 @@
                     }   
                 });
             }
-
             function NextLyrics(nextlyrics){
                 var text ="";
                 var lyrics = Lyrics[nextlyrics][0].split("");
@@ -111,14 +118,12 @@
                 $('.lyrics').html(text);
                 lyricshighlights();
             }
-
             var highlightnext= 0;
             function lyricshighlights() {
                 $('#p'+highlightnext).css("background-color", "green");
                  highlightnext++;
                 window.setTimeout(lyricshighlights, 200);
             }
-
             var getPlaylist = function() {
                 var res = [];
                 for(var i = 0; i < tracks.length; i+=1) {
@@ -130,8 +135,6 @@
                 }
                 return res;
             };
-
-
             var getVideoTime = function(){
                 var videotime = [];
                 for(var x =0; x < tracks.length; x+=1){
@@ -139,15 +142,12 @@
                 }
                 return videotime;
             };
-
             function getPlaylistDetails(videoID, videoStatus, currentPlay){
-
                 var playlist = [];
                 var classfield;
                 var clickstatus;
                 var c =0;
                 $.each(tracks, function(i) {
-
                     if((getPlaylist()[i] == videoID && videoStatus == 'videoPlay') || (getPlaylist()[i] == currentPlay)){
                         classfield ='class="activePlayed"';
                         clickstatus ='';
@@ -155,7 +155,7 @@
                         classfield ='class="activeHighlight"';
                         clickstatus ='ondblclick="clickPlaylist('+i+'); return false;"';
                     } else {
-                        classfield="";
+                        classfield='';
                         clickstatus='onclick="highLights('+i+')"';
                     }
                     if(tracks[i][0] == 1){
@@ -166,18 +166,14 @@
                      
                     c++;
                 }); 
-
                 $('.list').html( playlist.join(''));
               
             }
-
             var params = { allowScriptAccess: "always"};
             var atts = { id: "tubePlayer"};
             swfobject.embedSWF("http://www.youtube.com/apiplayer?enablejsapi=1&playerapiid=ytplayer&version=3&controls=1&showinfo=0", "tubePlayer", "425", "356", "8", null, null, params, atts);
-
             var player;
             var PlaylistIdentifier = {};
-
             function onYouTubePlayerReady(id, iter) {
                     
                 if(iter == undefined){
@@ -188,7 +184,6 @@
                 PlaylistIdentifier['Number'] = iter;
                 setInterVal();
                 player=$("#tubePlayer").get(0);
-
                 if(tracks[iter][0] == 1){ 
                     player.loadVideoById({'videoId': getPlaylist()[iter], 'startSeconds': 0,/* 'endSeconds': 0,*/ 'suggestedQuality': 'large'});
                     player.addEventListener("onStateChange", "onytplayerStateChange");
@@ -199,8 +194,6 @@
                     myAudio.play();
                 }
             }
-
-
             function Play(){
                 if(tracks[PlaylistIdentifier['Number']][0] == 1){
                     player.playVideo()
@@ -218,20 +211,16 @@
                          var myAudio = document.getElementById("myAudio"+PlaylistIdentifier['Number']+"");
                          myAudio.pause();
                     } 
-
                    var LenghtTime = $(this).text().indexOf(".");
                    var CurrentVideoTime = $(this).text().substring(0, LenghtTime);
                    var PlaylistNumber = tracks.length - 1;
-
                    if(CurrentVideoTime >= 81){
                         if(PlaylistIdentifier['Number'] < PlaylistNumber){
-                            alert('Next Video: ' + tracks[nextPlay()][1] + ' - ' + tracks[nextPlay()][2]);
+                            alert('Next Video: ' + tracks[PlaylistIdentifier['Number']+1][1] + ' - ' + tracks[PlaylistIdentifier['Number']+1][2]);
                         } 
                     }
                 });
             }
-
-
             function Next(){
                 var PlaylistNumber = tracks.length;
                 nextNumber = nextPlay();
@@ -245,8 +234,6 @@
                     alert('There are no video for next');
                 }
             }
-
-
             function Previous(){
                 if(PlaylistIdentifier['Number'] != 0){
                     previousNumber = PlaylistIdentifier['Number'] - 1;
@@ -259,8 +246,6 @@
                     alert('There are no video for previous');
                 }
             }
-
-
             function Restart(){
                 if(tracks[PlaylistIdentifier['Number']][0] == 1){
                     onYouTubePlayerReady('ytplayer', PlaylistIdentifier['Number']);
@@ -271,8 +256,6 @@
                 }
                 getCurrentTime('Reset');
             }
-
-
             function clickPlaylist(videoID){
                 onYouTubePlayerReady('ytplayer', videoID);
                  getCurrentTime('Reset');
@@ -280,15 +263,12 @@
                     getPlaylistDetails(getPlaylist()[videoID], 'videoPlay'); 
                 }
             }
-
             var videoSelected = [];
-            var videoNumSelected =[];
+            var videoNumSelected = [];
             function highLights(videoID){
-
                 if($.inArray(getPlaylist()[videoID], videoSelected) !== -1){
                     alert('already saved');
                 } else {
-
                     videoSelected.push(getPlaylist()[videoID]);
                     videoNumSelected.push(videoID);
                      if(tracks[PlaylistIdentifier['Number']][0] == 2){
@@ -304,29 +284,23 @@
             
                 }
             }
-
-
             function removeHightlights(){
                 if($.inArray(getPlaylist()[PlaylistIdentifier['Number']], videoSelected) !== -1){
                     videoSelected.splice($.inArray(getPlaylist()[PlaylistIdentifier['Number']], videoSelected),1);
                     videoNumSelected.splice($.inArray(PlaylistIdentifier['Number'], videoNumSelected),1);
                 } 
             }
-
             function nextPlay(){
-                if(videoNumSelected.length > 1){
-                    NextPlay = videoNumSelected[1];
+                if(videoNumSelected.length > 0){
+                    NextPlay = videoNumSelected[0];  
                 } else {
-                     NextPlay = PlaylistIdentifier['Number'] + 1;
+                    NextPlay = PlaylistIdentifier['Number'] + 1;
                 }
                 return NextPlay;
             }
-
-
             var secInterval = 0;
             var minutes = 0;
             var currentvideoTime;
-
             function getCurrentTime(status){
                 if(tracks[PlaylistIdentifier['Number']][0] == 2){
                     var myAudio = document.getElementById("myAudio"+PlaylistIdentifier['Number']+"");
@@ -334,60 +308,47 @@
                 } else {
                     $('.CurrentTime').text(player.getCurrentTime());
                 }
-
                 $('.CurrentTime').each(function(){
                         
                     var getCurrentTime = $(this).text();
                     var LenghtTime = getCurrentTime.indexOf(".");
                     var getSeconds = getCurrentTime.substring(0, LenghtTime);
-
                      if(status=='Reset'){
                         secInterval =0;
                         minutes = 0;
                         getSeconds =0;
                      }
-
                     if(secInterval == 0){
                         secInterval = 60;
                     }
-
                     if(getSeconds == secInterval){
                         secInterval = secInterval + 60;
                         ++minutes;
                     }
-
                     if(getSeconds > 59){
                         subValue = secInterval - 60;
-
                     } else {
                         subValue =0;
                     }
   
                     Seconds =  getSeconds - subValue;
-
                     if(Seconds <= 9){
                         Seconds = '0'+Seconds;
                     }
-
                     if(minutes == 1 && Seconds == 22){
                         NextPlay = nextPlay();
                         alert('Next Play: ' + tracks[NextPlay][1] + ' - ' + tracks[NextPlay][2]);
                     } 
-
                     currentvideoTime =  minutes + ':' + Seconds;
                     $('.VideoTime').text(currentvideoTime);
-
                     if(currentvideoTime >= tracks[PlaylistIdentifier['Number']][2]){
                         var PlaylistNumber = tracks.length - 1;
                         if(PlaylistIdentifier['Number'] < PlaylistNumber){
-                            onYouTubePlayerReady('ytplayer', NextPlay);
-
-                            if(tracks[NextPlay][0] == 1){
-                              getPlaylistDetails(getPlaylist()[NextPlay], 'videoPlay'); 
-                            } else {
-                                player.pauseVideo();
+                            nextNumber = PlaylistIdentifier['Number'] + 1;
+                            onYouTubePlayerReady('ytplayer', nextNumber);
+                            if(tracks[nextNumber][0] == 1){
+                              getPlaylistDetails(getPlaylist()[nextNumber], 'videoPlay'); 
                             }
-
                             minutes = 0;
                             secInterval =0;
                             Seconds =0;
@@ -397,7 +358,6 @@
                     }
                 });
             }
-
             
             function setInterVal(){
                 var myTimer     = setInterval(getCurrentTime,  1000);
